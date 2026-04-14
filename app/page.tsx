@@ -1,25 +1,31 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const COLORS = {
   green: "#22c55e",
   red: "#ef4444",
   blue: "#3b82f6",
   pink: "#ec4899",
-  none: "transparent"
+  none: "transparent",
+  black: "#000000",
+  gray: "#888888"
 };
 
 export default function Home() {
-  const [tab, setTab] = useState<"notes" | "scribble">("notes");
+  const [isScribbleMode, setIsScribbleMode] = useState(false);
   const [noteHtml, setNoteHtml] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState("Saved");
   const [isAIProcessing, setIsAIProcessing] = useState(false);
   const [aiStatus, setAIStatus] = useState("");
+  const [selectedColor, setSelectedColor] = useState(COLORS.red);
+  const [selectedHighlight, setSelectedHighlight] = useState(COLORS.none);
+  const [selectedPen, setSelectedPen] = useState(COLORS.green);
   
   const editorRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
   const worker = useRef<Worker | null>(null);
@@ -29,16 +35,69 @@ export default function Home() {
     const savedNote = localStorage.getItem("pinnote-html");
     const savedScribble = localStorage.getItem("pinnote-scribble");
     if (savedNote) setNoteHtml(savedNote);
+    
+    // Set initial pen color
+    const ctx = canvasRef.current?.getContext("2d");
+    if (ctx) {
+      ctx.strokeStyle = selectedPen;
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+    }
+
     if (savedScribble && canvasRef.current) {
       const img = new Image();
       img.onload = () => {
         const ctx = canvasRef.current?.getContext("2d");
-        ctx?.drawImage(img, 0, 0);
+        if (ctx && canvasRef.current) {
+          // If saved image is smaller than current canvas, it's fine.
+          // If larger, we might need to resize canvas.
+          if (img.width > canvasRef.current.width || img.height > canvasRef.current.height) {
+            canvasRef.current.width = Math.max(canvasRef.current.width, img.width);
+            canvasRef.current.height = Math.max(canvasRef.current.height, img.height);
+          }
+          ctx.drawImage(img, 0, 0);
+          // Restore context settings after resize
+          ctx.strokeStyle = selectedPen;
+          ctx.lineWidth = 2;
+          ctx.lineCap = "round";
+        }
       };
       img.src = savedScribble;
     }
     setIsLoading(false);
   }, []);
+
+  // Resize canvas to match content size
+  useEffect(() => {
+    const resizeCanvas = () => {
+      if (canvasRef.current && editorRef.current) {
+        const width = editorRef.current.scrollWidth;
+        const height = Math.max(editorRef.current.scrollHeight, editorRef.current.offsetHeight, 1000);
+        
+        if (canvasRef.current.width !== width || canvasRef.current.height !== height) {
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvasRef.current.width;
+          tempCanvas.height = canvasRef.current.height;
+          tempCanvas.getContext('2d')?.drawImage(canvasRef.current, 0, 0);
+          
+          canvasRef.current.width = width;
+          canvasRef.current.height = height;
+          
+          const ctx = canvasRef.current.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(tempCanvas, 0, 0);
+            ctx.strokeStyle = selectedPen;
+            ctx.lineWidth = 2;
+            ctx.lineCap = "round";
+          }
+        }
+      }
+    };
+
+    const observer = new ResizeObserver(resizeCanvas);
+    if (editorRef.current) observer.observe(editorRef.current);
+    return () => observer.disconnect();
+  }, [noteHtml, selectedPen]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -52,13 +111,13 @@ export default function Home() {
       }, 1000);
       return () => clearTimeout(timeout);
     }
-  }, [noteHtml, isLoading, tab]);
+  }, [noteHtml, isLoading, isScribbleMode]);
 
-  // --- AI WORKER (v0.3.0 logic) ---
+  // --- AI WORKER ---
   useEffect(() => {
     const aiWorker = new Worker(new URL("./ai-worker.js", import.meta.url));
     aiWorker.onmessage = (e) => {
-      const { status, output, error } = e.data;
+      const { status, output } = e.data;
       if (status === "done") {
         setNoteHtml(output);
         if (editorRef.current) editorRef.current.innerHTML = output;
@@ -75,7 +134,6 @@ export default function Home() {
     if (!worker.current || !noteHtml || isAIProcessing) return;
     setIsAIProcessing(true);
     setAIStatus(`${action}...`);
-    // Strip HTML for AI processing
     const textOnly = editorRef.current?.innerText || "";
     worker.current.postMessage({ action, text: textOnly });
   };
@@ -84,17 +142,20 @@ export default function Home() {
   const formatText = (command: string, value: string) => {
     document.execCommand(command, false, value);
     if (editorRef.current) setNoteHtml(editorRef.current.innerHTML);
+    if (command === "foreColor") setSelectedColor(value);
+    if (command === "hiliteColor") setSelectedHighlight(value);
   };
 
   // --- SCRIBBLE LOGIC ---
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isScribbleMode) return;
     isDrawing.current = true;
     const pos = getPos(e);
     lastPos.current = pos;
   };
 
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing.current || !canvasRef.current) return;
+    if (!isDrawing.current || !canvasRef.current || !isScribbleMode) return;
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
@@ -110,10 +171,18 @@ export default function Home() {
     const rect = canvasRef.current!.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
+    
+    const scaleX = canvasRef.current!.width / rect.width;
+    const scaleY = canvasRef.current!.height / rect.height;
+    
+    return { 
+      x: (clientX - rect.left) * scaleX, 
+      y: (clientY - rect.top) * scaleY 
+    };
   };
 
   const setPen = (color: string) => {
+    setSelectedPen(color);
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx) {
       ctx.strokeStyle = color;
@@ -134,84 +203,106 @@ export default function Home() {
 
   return (
     <main className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
-      {/* Header & Tabs */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-2 border-b border-black/[.08] dark:border-white/[.145] bg-background/50">
         <div className="flex items-center gap-4">
           <h1 className="text-xs font-bold tracking-widest opacity-50">PINNOTE</h1>
-          <nav className="flex gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
-            <button onClick={() => setTab("notes")} className={`px-3 py-1 text-[10px] font-bold rounded ${tab === "notes" ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}>NOTES</button>
-            <button onClick={() => setTab("scribble")} className={`px-3 py-1 text-[10px] font-bold rounded ${tab === "scribble" ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}>SCRIBBLE</button>
-          </nav>
+          <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
+             <button 
+               onClick={() => setIsScribbleMode(false)} 
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${!isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+             >
+               TEXT
+             </button>
+             <button 
+               onClick={() => setIsScribbleMode(true)} 
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+             >
+               SCRIBBLE
+             </button>
+          </div>
         </div>
-        <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
+        <div className="flex items-center gap-3">
+          {aiStatus && <span className="text-[10px] font-mono text-blue-500 animate-pulse">{aiStatus}</span>}
+          <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
+        </div>
       </div>
 
-      {/* Toolbars */}
-      <div className="flex flex-col border-b border-black/[.05] dark:border-white/[.05]">
-        {tab === "notes" ? (
-          <div className="flex items-center gap-4 px-4 py-2 bg-zinc-50 dark:bg-zinc-900/50 overflow-x-auto no-scrollbar">
-            <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-              <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
-              {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
-                <button key={name} onClick={() => formatText("foreColor", code)} className="w-4 h-4 rounded-full border border-black/10" style={{ background: code }} />
-              ))}
-            </div>
-            <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-              <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
-              {Object.entries(COLORS).map(([name, code]) => (
-                <button key={name} onClick={() => formatText("hiliteColor", code)} className="w-4 h-4 rounded border border-black/10 flex items-center justify-center" style={{ background: code }}>
-                  {name === "none" && <span className="text-[8px] opacity-50">×</span>}
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <button onClick={() => runAIAction('rewrite')} className="ai-btn">AI Rewrite</button>
-              <button onClick={() => runAIAction('summarize')} className="ai-btn">Summarize</button>
-            </div>
+      {/* Unified Toolbar */}
+      <div className="flex flex-col border-b border-black/[.05] dark:border-white/[.05] bg-zinc-50 dark:bg-zinc-900/50">
+        <div className="flex items-center gap-4 px-4 py-2 overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
+            {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (
+              <button 
+                key={name} 
+                onClick={() => formatText("foreColor", code)} 
+                className={`w-5 h-5 rounded-full border border-black/10 transition-all ${selectedColor === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
+                style={{ background: code }} 
+              />
+            ))}
           </div>
-        ) : (
-          <div className="flex items-center gap-4 px-4 py-2 bg-zinc-50 dark:bg-zinc-900/50">
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Pen:</span>
-              {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
-                <button key={name} onClick={() => setPen(code)} className="w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm" style={{ background: code }} />
-              ))}
-              <button onClick={() => setPen("#888888")} className="w-5 h-5 rounded-full bg-zinc-400" />
-            </div>
-            <button onClick={clearCanvas} className="text-[10px] font-bold text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded">Clear Canvas</button>
+
+          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
+            {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
+              <button 
+                key={name} 
+                onClick={() => formatText("hiliteColor", code)} 
+                className={`w-5 h-5 rounded border border-black/10 flex items-center justify-center transition-all ${selectedHighlight === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
+                style={{ background: code }}
+              >
+                {name === "none" && <span className="text-[8px] opacity-50">×</span>}
+              </button>
+            ))}
           </div>
-        )}
+
+          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Pen:</span>
+            {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
+              <button 
+                key={name} 
+                onClick={() => setPen(code)} 
+                className={`w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm transition-all ${selectedPen === code ? "ring-2 ring-blue-500 ring-offset-1 scale-110" : ""}`} 
+                style={{ background: code }} 
+              />
+            ))}
+            <button onClick={clearCanvas} className="ml-2 text-[9px] font-bold text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded hover:bg-red-500/20">Clear</button>
+          </div>
+
+          <div className="flex gap-2">
+            <button onClick={() => runAIAction('rewrite')} className="ai-btn">Rewrite</button>
+            <button onClick={() => runAIAction('summarize')} className="ai-btn">Summarize</button>
+          </div>
+        </div>
       </div>
 
-      {/* Editor Content */}
-      <div className="flex-1 relative overflow-hidden bg-white dark:bg-zinc-950">
-        <div className={`absolute inset-0 p-6 overflow-y-auto ${tab === "notes" ? "block" : "hidden"}`}>
+      {/* Integrated Editor Content */}
+      <div className="flex-1 relative bg-white dark:bg-zinc-950 overflow-y-auto" ref={scrollContainerRef}>
+        <div className="relative min-h-full p-8">
           <div
             ref={editorRef}
-            contentEditable
+            contentEditable={!isScribbleMode}
             onInput={(e) => setNoteHtml(e.currentTarget.innerHTML)}
-            className="w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none"
+            className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
             dangerouslySetInnerHTML={{ __html: noteHtml }}
           />
+          <canvas
+            ref={canvasRef}
+            className={`absolute top-0 left-0 w-full h-full z-20 ${isScribbleMode ? "cursor-crosshair pointer-events-auto" : "pointer-events-none"}`}
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={() => isDrawing.current = false}
+            onMouseLeave={() => isDrawing.current = false}
+            onTouchStart={startDrawing}
+            onTouchMove={draw}
+            onTouchEnd={() => isDrawing.current = false}
+          />
         </div>
-        
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={1200}
-          className={`absolute inset-0 w-full h-full cursor-crosshair ${tab === "scribble" ? "block" : "hidden"}`}
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={() => isDrawing.current = false}
-          onMouseLeave={() => isDrawing.current = false}
-          onTouchStart={startDrawing}
-          onTouchMove={draw}
-          onTouchEnd={() => isDrawing.current = false}
-        />
       </div>
 
       <style jsx>{`
-        .ai-btn { @apply px-2 py-0.5 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold uppercase hover:bg-blue-500/20 transition-colors; }
+        .ai-btn { @apply px-2 py-1 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold uppercase hover:bg-blue-500/20 transition-colors; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
     </main>
