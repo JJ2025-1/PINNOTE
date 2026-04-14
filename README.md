@@ -8,23 +8,33 @@ A minimalist, high-productivity notepad designed for developers. PINNOTE stays p
 - **Smart Window Behavior:** 
   - Configured as a `utility` window to prevent auto-minimization in GNOME/Fedora.
   - Visible across all workspaces and activities.
-  - Re-asserts focus/priority on blur to ensure it stays pinned while you code.
-- **Minimalist UI:** Distraction-free interface built with Next.js and Tailwind CSS.
+  - **Context-Aware Suggestions:** Auto-detects keywords to suggest relevant #tags.
+  - **Offline AI Toolbox:** 
+    - **Rewrite:** Improves clarity and grammar.
+    - **Summarize:** Condenses long notes into key points.
+    - **Tone Switching:** Toggle between Formal and Casual styles.
+    - **Privacy First:** Runs locally using `SmolLM-135M` (~90MB) - no data leaves your machine.
+  - **Minimalist UI:** Distraction-free interface built with Next.js and Tailwind CSS.
 
-## 🛠️ Development Roadmap
+  ## 🛠️ Development Roadmap
 
-### Phase 1: Core Notepad UI (Completed ✅)
-- [x] Implement a clean, full-screen text area in Next.js.
-- [x] Add `localStorage` integration for instant persistence.
-- [x] Style with Geist and Tailwind for a modern look.
+  ### Phase 1: Core Notepad UI (Completed ✅)
+  - [x] Implement a clean, full-screen text area in Next.js.
+  - [x] Add `localStorage` integration for instant persistence.
+  - [x] Style with Geist and Tailwind for a modern look.
 
-### Phase 2: Desktop Integration (Completed ✅)
-- [x] Integrate Electron to wrap the Next.js application.
-- [x] Configure BrowserWindow with `alwaysOnTop: true` and `type: 'utility'`.
-- [x] Implement `setVisibleOnAllWorkspaces` for Fedora activity switching.
-- [x] Add blur-event listeners to prevent focus-loss minimization.
+  ### Phase 2: Desktop Integration (Completed ✅)
+  - [x] Integrate Electron to wrap the Next.js application.
+  - [x] Configure BrowserWindow with `alwaysOnTop: true` and `type: 'utility'`.
+  - [x] Implement `setVisibleOnAllWorkspaces` for Fedora activity switching.
+  - [x] Add blur-event listeners to prevent focus-loss minimization.
 
-### Phase 3: Linux/Fedora Optimization (In Progress 🏗️)
+  ### Phase 3: AI & Smart Features (Completed ✅)
+  - [x] Add Context-Aware hashtag suggestions.
+  - [x] Implement Offline AI (Transformers.js) for text manipulation.
+  - [x] Optimize model size (<100MB) for low-resource environments.
+
+  ### Phase 4: Linux/Fedora Optimization (In Progress 🏗️)
 - [ ] Create a `.desktop` entry for easy launching on Fedora.
 - [ ] Add keyboard shortcuts (e.g., `Ctrl + S` to force save, `Ctrl + Q` to quit).
 - [ ] Optimize window positioning for dual-monitor setups.
