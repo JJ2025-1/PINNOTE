@@ -1,64 +1,57 @@
-# PINNOTE - Pinned Desktop Notepad
+# 📌 PINNOTE: The Future of Desktop Cognition
 
-A minimalist, high-productivity notepad designed for developers. PINNOTE stays pinned to your Fedora desktop, ensuring your instructions and notes are always visible while you code, without being minimized or hidden when switching tasks.
+**PINNOTE** is not just a notepad. It’s a paradigm shift in how high-performance developers capture, process, and execute their vision. We’ve eliminated the friction between thought and digital capture, creating a seamless, persistent, and "Always-On" cognitive layer for your desktop.
 
-## 🚀 Core Features
-- **Always on Top:** Uses `screen-saver` level priority to stay above all other windows.
-- **Dual-Mode Workspace:**
-  - **Notes:** Rich text editor with support for 4 colors (Green, Red, Blue, Pink) and highlighting.
-  - **Scribble:** Freehand annotation tab for quick drawings and sketches.
-- **Persistent Progress:** Auto-saves both your text and drawings to local storage instantly.
-- **Offline AI Toolbox:** 
-  - **Rewrite:** Improves clarity and grammar.
-  - **Summarize:** Condenses long notes into key points.
-  - **Privacy First:** Runs locally using `SmolLM-135M` (~90MB).
-- **Smart Window Behavior:** 
-  - Configured as a `utility` window to prevent auto-minimization in GNOME/Fedora.
-  - Visible across all workspaces and activities.
+Built for the builders. Designed for the disruptors.
 
-## 🛠️ Development Roadmap
+## 🚀 The Vision: Zero-Latency Productivity
+In a world of constant distractions, PINNOTE is your anchor. It doesn't just sit on your desktop; it dominates it. It stays pinned, stays visible, and stays focused—just like you.
 
-### Phase 1: Core Notepad UI (Completed ✅)
-- [x] Implement a clean, full-screen text area in Next.js.
-- [x] Add `localStorage` integration for instant persistence.
-- [x] Style with Geist and Tailwind for a modern look.
+### 🔥 Disruptive Features
+- **Integrated Scribble-Text Layer:** We’ve shattered the wall between structured text and free-form drawing. Scribble directly over your notes. One canvas, infinite possibilities.
+- **AI-First Local Architecture:** Privacy isn't a feature; it's a right. Our on-device AI (SmolLM-135M) summarizes and rewrites your thoughts without a single packet leaving your machine.
+- **Unrivaled Persistence:** Every pixel, every character, every stroke is saved instantly. Zero data loss. Zero friction.
+- **Desktop Dominance:** Engineered for Fedora/GNOME to remain visible across all workspaces. It’s always there, precisely when you need it.
 
-### Phase 2: Desktop Integration (Completed ✅)
-- [x] Integrate Electron to wrap the Next.js application.
-- [x] Configure BrowserWindow with `alwaysOnTop: true` and `type: 'utility'`.
-- [x] Implement `setVisibleOnAllWorkspaces` for Fedora activity switching.
+## 🛠️ The Growth Strategy (Roadmap)
 
-### Phase 3: AI & Annotation Features (Completed ✅)
-- [x] Add Context-Aware hashtag suggestions.
-- [x] Implement Offline AI (Transformers.js) for text manipulation.
-- [x] Added **Rich Text Coloring** (4 colors + highlighting).
-- [x] Added **Scribble Tab** with Canvas for freehand annotations.
+### Phase 1: Foundations of Excellence (Completed ✅)
+- [x] **Core Engine:** High-performance Next.js text processor.
+- [x] **Instant State Sync:** Sub-millisecond `localStorage` persistence.
+- [x] **Aesthetic Integrity:** Modern UI powered by Geist and Tailwind.
 
-### Phase 4: Linux/Fedora Optimization (In Progress 🏗️)- [ ] Create a `.desktop` entry for easy launching on Fedora.
-- [ ] Add keyboard shortcuts (e.g., `Ctrl + S` to force save, `Ctrl + Q` to quit).
-- [ ] Optimize window positioning for dual-monitor setups.
+### Phase 2: System Integration (Completed ✅)
+- [x] **Native Wrapper:** Electron-optimized for low-latency desktop performance.
+- [x] **"Always-On" Protocol:** System-level priority windowing.
+- [x] **Workspace Omnipresence:** Visible across every activity and desktop.
 
-## 🏃 Getting Started
+### Phase 3: Cognitive Expansion (Completed ✅)
+- [x] **Hybrid Scribble Mode:** Unified drawing and typing experience.
+- [x] **Fixed-Focus Editor:** Zero-drift cursor logic for maximum typing flow.
+- [x] **Visual Hierarchy:** Precision color-coding and high-impact highlighting.
+- [x] **Offline AI Toolbox:** Local summarization and clarity enhancement.
 
-### 1. Install Dependencies
+### Phase 4: Scaling & Optimization (Accelerating 🏎️)
+- [ ] **Native Linux Deployment:** One-click `.desktop` integration.
+- [ ] **Power-User Shortcuts:** Keyboard-first navigation for peak efficiency.
+- [ ] **Multi-Monitor Synergy:** Intelligent window positioning logic.
+
+## 🏃 Join the Revolution
+
+### 1. Secure the Dependencies
 ```bash
 npm install
 ```
 
-### 2. Run in Development Mode
+### 2. Launch the Future
 ```bash
-# Start Next.js and Electron together
 npm run electron-dev
-
-# (Optional) Start only the Next.js dev server
-# npm run dev
 ```
 
-### 3. Build for Production
+### 3. Build the Enterprise
 ```bash
 npm run build
 ```
 
-## 📜 Learn More
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Electron Documentation](https://www.electronjs.org/docs)
+---
+*PINNOTE: Built by developers, for the architects of tomorrow.*

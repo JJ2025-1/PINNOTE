@@ -29,12 +29,18 @@ export default function Home() {
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
   const worker = useRef<Worker | null>(null);
+  const lastHtml = useRef("");
 
   // --- PERSISTENCE ---
   useEffect(() => {
-    const savedNote = localStorage.getItem("pinnote-html");
+    const savedNote = localStorage.getItem("pinnote-html") || "<div><br></div>";
     const savedScribble = localStorage.getItem("pinnote-scribble");
-    if (savedNote) setNoteHtml(savedNote);
+    
+    setNoteHtml(savedNote);
+    lastHtml.current = savedNote;
+    if (editorRef.current) {
+      editorRef.current.innerHTML = savedNote;
+    }
     
     // Set initial pen color
     const ctx = canvasRef.current?.getContext("2d");
@@ -49,14 +55,11 @@ export default function Home() {
       img.onload = () => {
         const ctx = canvasRef.current?.getContext("2d");
         if (ctx && canvasRef.current) {
-          // If saved image is smaller than current canvas, it's fine.
-          // If larger, we might need to resize canvas.
           if (img.width > canvasRef.current.width || img.height > canvasRef.current.height) {
             canvasRef.current.width = Math.max(canvasRef.current.width, img.width);
             canvasRef.current.height = Math.max(canvasRef.current.height, img.height);
           }
           ctx.drawImage(img, 0, 0);
-          // Restore context settings after resize
           ctx.strokeStyle = selectedPen;
           ctx.lineWidth = 2;
           ctx.lineCap = "round";
@@ -66,6 +69,15 @@ export default function Home() {
     }
     setIsLoading(false);
   }, []);
+
+  // Sync state from editorRef WITHOUT re-rendering dangerouslySetInnerHTML
+  const handleInput = () => {
+    if (editorRef.current) {
+      const html = editorRef.current.innerHTML;
+      lastHtml.current = html;
+      setNoteHtml(html);
+    }
+  };
 
   // Resize canvas to match content size
   useEffect(() => {
@@ -120,6 +132,7 @@ export default function Home() {
       const { status, output } = e.data;
       if (status === "done") {
         setNoteHtml(output);
+        lastHtml.current = output;
         if (editorRef.current) editorRef.current.innerHTML = output;
         setIsAIProcessing(false);
         setAIStatus("");
@@ -140,8 +153,12 @@ export default function Home() {
 
   // --- TEXT FORMATTING ---
   const formatText = (command: string, value: string) => {
+    // Focus the editor first to ensure command applies correctly
+    if (editorRef.current) {
+        editorRef.current.focus();
+    }
     document.execCommand(command, false, value);
-    if (editorRef.current) setNoteHtml(editorRef.current.innerHTML);
+    handleInput();
     if (command === "foreColor") setSelectedColor(value);
     if (command === "hiliteColor") setSelectedHighlight(value);
   };
@@ -279,13 +296,13 @@ export default function Home() {
 
       {/* Integrated Editor Content */}
       <div className="flex-1 relative bg-white dark:bg-zinc-950 overflow-y-auto" ref={scrollContainerRef}>
-        <div className="relative min-h-full p-8">
+        <div className="relative min-h-full p-8" style={{ direction: 'ltr', textAlign: 'left' }}>
           <div
             ref={editorRef}
             contentEditable={!isScribbleMode}
-            onInput={(e) => setNoteHtml(e.currentTarget.innerHTML)}
+            onInput={handleInput}
             className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
-            dangerouslySetInnerHTML={{ __html: noteHtml }}
+            style={{ direction: 'ltr', textAlign: 'left' }}
           />
           <canvas
             ref={canvasRef}
