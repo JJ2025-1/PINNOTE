@@ -17,8 +17,6 @@ export default function Home() {
   const [noteHtml, setNoteHtml] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState("Saved");
-  const [isAIProcessing, setIsAIProcessing] = useState(false);
-  const [aiStatus, setAIStatus] = useState("");
   const [selectedColor, setSelectedColor] = useState(COLORS.red);
   const [selectedHighlight, setSelectedHighlight] = useState(COLORS.none);
   const [selectedPen, setSelectedPen] = useState(COLORS.green);
@@ -28,7 +26,6 @@ export default function Home() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isDrawing = useRef(false);
   const lastPos = useRef({ x: 0, y: 0 });
-  const worker = useRef<Worker | null>(null);
   const lastHtml = useRef("");
 
   // --- PERSISTENCE ---
@@ -125,38 +122,6 @@ export default function Home() {
     }
   }, [noteHtml, isLoading, isScribbleMode]);
 
-  // --- AI WORKER ---
-  useEffect(() => {
-    const aiWorker = new Worker(new URL("./ai-worker.js", import.meta.url));
-    aiWorker.onmessage = (e) => {
-      const { status, output, message } = e.data;
-      if (status === "done") {
-        if (editorRef.current) {
-          editorRef.current.focus();
-          document.execCommand('insertHTML', false, `<span style="color: #3b82f6;">${output}</span>`);
-          handleInput();
-        }
-        setIsAIProcessing(false);
-        setAIStatus("");
-      } else if (status === "loading") {
-        setAIStatus(message || "AI Loading...");
-      } else if (status === "error") { 
-        setAIStatus("AI Error"); 
-        setIsAIProcessing(false); 
-      }
-    };
-    worker.current = aiWorker;
-    return () => aiWorker.terminate();
-  }, []);
-
-  const runAIAction = (action: string) => {
-    if (!worker.current || !noteHtml || isAIProcessing) return;
-    setIsAIProcessing(true);
-    setAIStatus(`${action}...`);
-    const textOnly = editorRef.current?.innerText || "";
-    worker.current.postMessage({ action, text: textOnly });
-  };
-
   // --- TEXT FORMATTING ---
   const formatText = (command: string, value: string) => {
     // Focus the editor first to ensure command applies correctly
@@ -252,7 +217,6 @@ export default function Home() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {aiStatus && <span className="text-[10px] font-mono text-blue-500 animate-pulse">{aiStatus}</span>}
           <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
         </div>
       </div>
@@ -275,7 +239,7 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+              <div className="flex items-center gap-1">
                 <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
                 {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
                   <button 
@@ -288,11 +252,6 @@ export default function Home() {
                     {name === "none" && <span className="text-[8px] opacity-50">×</span>}
                   </button>
                 ))}
-              </div>
-
-              <div className="flex gap-2">
-                <button onMouseDown={(e) => e.preventDefault()} onClick={() => runAIAction('rewrite')} className="ai-btn">Rewrite</button>
-                <button onMouseDown={(e) => e.preventDefault()} onClick={() => runAIAction('summarize')} className="ai-btn">Summarize</button>
               </div>
             </>
           ) : (
@@ -339,7 +298,6 @@ export default function Home() {
       </div>
 
       <style jsx>{`
-        .ai-btn { @apply px-2 py-1 rounded bg-blue-500/10 text-blue-500 text-[9px] font-bold uppercase hover:bg-blue-500/20 transition-colors; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
       `}</style>
     </main>
