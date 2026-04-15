@@ -5,19 +5,26 @@ let generator = null;
 const loadModel = async () => {
   if (generator) return generator;
   
-  self.postMessage({ status: "loading" });
+  self.postMessage({ status: "loading", message: "Initialing AI..." });
   
-  // Using SmolLM-135M (~90MB on disk)
-  // It's small, fast, and fits your <100MB requirement
-  generator = await pipeline('text-generation', 'Xenova/SmolLM-135M-Instruct', {
-    progress_callback: (p) => {
-      if (p.status === 'progress') {
-        self.postMessage({ status: "loading", progress: p.progress });
+  // Using Qwen2.5-0.5B-Instruct - much smarter than SmolLM and still very small
+  // We use the 4-bit quantized version for maximum speed
+  try {
+    generator = await pipeline('text-generation', 'onnx-community/Qwen2.5-0.5B-Instruct', {
+      device: 'wasm', // wasm is most compatible
+      progress_callback: (p) => {
+        if (p.status === 'progress') {
+          self.postMessage({ status: "loading", progress: p.progress, message: `Downloading AI: ${Math.round(p.progress)}%` });
+        }
       }
-    }
-  });
+    });
+    self.postMessage({ status: "ready" });
+  } catch (err) {
+    console.error("Model load error:", err);
+    // Fallback to SmolLM if Qwen fails for some reason
+    generator = await pipeline('text-generation', 'Xenova/SmolLM-135M-Instruct');
+  }
 
-  self.postMessage({ status: "ready" });
   return generator;
 };
 
@@ -27,32 +34,38 @@ self.onmessage = async (event) => {
   try {
     const pipe = await loadModel();
     
-    let prompt = "";
+    let instruction = "";
     if (action === "rewrite") {
-      prompt = `Rewrite this text to be clearer and more professional:\n\n${text}\n\nRewritten:`;
+      instruction = "Rewrite the following text to be clearer, more professional, and concise. Only provide the rewritten text.";
     } else if (action === "summarize") {
-      prompt = `Summarize this text into a few key bullet points:\n\n${text}\n\nSummary:`;
-    } else if (action === "formal") {
-      prompt = `Change the tone of this text to be very formal and professional:\n\n${text}\n\nFormal:`;
-    } else if (action === "casual") {
-      prompt = `Change the tone of this text to be friendly and casual:\n\n${text}\n\nCasual:`;
+      instruction = "Summarize the following text into 3 short bullet points. Be extremely brief.";
     }
+
+    // Qwen-style Chat Template
+    const prompt = `<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n${instruction}\n\nTEXT:\n${text}<|im_end|>\n<|im_start|>assistant\n`;
+
+    self.postMessage({ status: "loading", message: "AI is thinking..." });
 
     const output = await pipe(prompt, {
       max_new_tokens: 128,
-      temperature: 0.7,
-      repetition_penalty: 1.2,
+      temperature: 0.2, // Lower temperature for faster, more focused output
+      repetition_penalty: 1.1,
+      stop_sequence: ["<|im_end|>", "<|endoftext|>"],
+      return_full_text: false,
     });
 
-    // Clean up the output to only return the generated part
-    const result = output[0].generated_text.split(prompt.slice(-10))[1] || output[0].generated_text;
+    let result = output[0].generated_text;
+    
+    // Clean up if the template tags leaked in
+    result = result.replace("<|im_start|>assistant\n", "").replace("<|im_end|>", "").trim();
     
     self.postMessage({ 
       status: "done", 
-      output: result.trim() 
+      output: result 
     });
 
   } catch (error) {
+    console.error("AI Worker Error:", error);
     self.postMessage({ status: "error", error: error.message });
   }
 };

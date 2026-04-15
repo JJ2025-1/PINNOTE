@@ -129,15 +129,21 @@ export default function Home() {
   useEffect(() => {
     const aiWorker = new Worker(new URL("./ai-worker.js", import.meta.url));
     aiWorker.onmessage = (e) => {
-      const { status, output } = e.data;
+      const { status, output, message } = e.data;
       if (status === "done") {
-        setNoteHtml(output);
-        lastHtml.current = output;
-        if (editorRef.current) editorRef.current.innerHTML = output;
+        if (editorRef.current) {
+          editorRef.current.focus();
+          document.execCommand('insertHTML', false, `<span style="color: #3b82f6;">${output}</span>`);
+          handleInput();
+        }
         setIsAIProcessing(false);
         setAIStatus("");
-      } else if (status === "loading") setAIStatus("AI Loading...");
-      else if (status === "error") { setAIStatus("AI Error"); setIsAIProcessing(false); }
+      } else if (status === "loading") {
+        setAIStatus(message || "AI Loading...");
+      } else if (status === "error") { 
+        setAIStatus("AI Error"); 
+        setIsAIProcessing(false); 
+      }
     };
     worker.current = aiWorker;
     return () => aiWorker.terminate();
@@ -175,6 +181,10 @@ export default function Home() {
     if (!isDrawing.current || !canvasRef.current || !isScribbleMode) return;
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
+
+    ctx.strokeStyle = selectedPen;
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
 
     const pos = getPos(e);
     ctx.beginPath();
@@ -226,12 +236,14 @@ export default function Home() {
           <h1 className="text-xs font-bold tracking-widest opacity-50">PINNOTE</h1>
           <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
              <button 
+               onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(false)} 
                className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${!isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
              >
                TEXT
              </button>
              <button 
+               onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(true)} 
                className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
              >
@@ -248,49 +260,57 @@ export default function Home() {
       {/* Unified Toolbar */}
       <div className="flex flex-col border-b border-black/[.05] dark:border-white/[.05] bg-zinc-50 dark:bg-zinc-900/50">
         <div className="flex items-center gap-4 px-4 py-2 overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
-            {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (
-              <button 
-                key={name} 
-                onClick={() => formatText("foreColor", code)} 
-                className={`w-5 h-5 rounded-full border border-black/10 transition-all ${selectedColor === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
-                style={{ background: code }} 
-              />
-            ))}
-          </div>
+          {!isScribbleMode ? (
+            <>
+              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
+                {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (
+                  <button 
+                    key={name} 
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => formatText("foreColor", code)} 
+                    className={`w-5 h-5 rounded-full border border-black/10 transition-all ${selectedColor === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
+                    style={{ background: code }} 
+                  />
+                ))}
+              </div>
 
-          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
-            {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
-              <button 
-                key={name} 
-                onClick={() => formatText("hiliteColor", code)} 
-                className={`w-5 h-5 rounded border border-black/10 flex items-center justify-center transition-all ${selectedHighlight === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
-                style={{ background: code }}
-              >
-                {name === "none" && <span className="text-[8px] opacity-50">×</span>}
-              </button>
-            ))}
-          </div>
+              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
+                {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
+                  <button 
+                    key={name} 
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={() => formatText("hiliteColor", code)} 
+                    className={`w-5 h-5 rounded border border-black/10 flex items-center justify-center transition-all ${selectedHighlight === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
+                    style={{ background: code }}
+                  >
+                    {name === "none" && <span className="text-[8px] opacity-50">×</span>}
+                  </button>
+                ))}
+              </div>
 
-          <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-            <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Pen:</span>
-            {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
-              <button 
-                key={name} 
-                onClick={() => setPen(code)} 
-                className={`w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm transition-all ${selectedPen === code ? "ring-2 ring-blue-500 ring-offset-1 scale-110" : ""}`} 
-                style={{ background: code }} 
-              />
-            ))}
-            <button onClick={clearCanvas} className="ml-2 text-[9px] font-bold text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded hover:bg-red-500/20">Clear</button>
-          </div>
-
-          <div className="flex gap-2">
-            <button onClick={() => runAIAction('rewrite')} className="ai-btn">Rewrite</button>
-            <button onClick={() => runAIAction('summarize')} className="ai-btn">Summarize</button>
-          </div>
+              <div className="flex gap-2">
+                <button onMouseDown={(e) => e.preventDefault()} onClick={() => runAIAction('rewrite')} className="ai-btn">Rewrite</button>
+                <button onMouseDown={(e) => e.preventDefault()} onClick={() => runAIAction('summarize')} className="ai-btn">Summarize</button>
+              </div>
+            </>
+          ) : (
+            <div className="flex items-center gap-1">
+              <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Pen:</span>
+              {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
+                <button 
+                  key={name} 
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => setPen(code)} 
+                  className={`w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm transition-all ${selectedPen === code ? "ring-2 ring-blue-500 ring-offset-1 scale-110" : ""}`} 
+                  style={{ background: code }} 
+                />
+              ))}
+              <div className="w-[1px] h-4 bg-black/[.1] mx-2" />
+              <button onMouseDown={(e) => e.preventDefault()} onClick={clearCanvas} className="text-[9px] font-bold text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded hover:bg-red-500/20">Clear</button>
+            </div>
+          )}
         </div>
       </div>
 
