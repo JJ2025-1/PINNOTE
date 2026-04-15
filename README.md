@@ -1,57 +1,27 @@
-# 📌 PINNOTE: The Future of Desktop Cognition
+# PINNOTE | AI-Assisted Hybrid Notepad
 
-**PINNOTE** is not just a notepad. It’s a paradigm shift in how high-performance developers capture, process, and execute their vision. We’ve eliminated the friction between thought and digital capture, creating a seamless, persistent, and "Always-On" cognitive layer for your desktop.
+Pinnote is a high-performance, local-first notepad designed to bridge the gap between structured text and free-form digital ink. Built for speed and privacy, it leverages on-device AI to help you refine your thoughts without compromising your data.
 
-Built for the builders. Designed for the disruptors.
+## 🚀 The Vision
+Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic canvas. **Pinnote removes the boundary.** Scribble directly over your typed notes, annotate your thoughts, and use local AI to summarize or rewrite your content instantly.
 
-## 🚀 The Vision: Zero-Latency Productivity
-In a world of constant distractions, PINNOTE is your anchor. It doesn't just sit on your desktop; it dominates it. It stays pinned, stays visible, and stays focused—just like you.
+## ✨ Core Features
+- **Hybrid Canvas:** A unified layer where text and digital ink coexist seamlessly.
+- **Local-First AI:** Powered by `Qwen2.5-0.5B-Instruct` (quantized for web), providing summarizing and rewriting capabilities entirely in your browser.
+- **Zero-Latency Scribble:** Optimized canvas rendering for a natural drawing experience.
+- **Privacy by Design:** No cloud sync, no data tracking. Your notes stay in your browser's local storage.
+- **Contextual Tools:** Dynamic toolbars that switch between Text formatting and Scribble controls based on your current mode.
 
-### 🔥 Disruptive Features
-- **Integrated Scribble-Text Layer:** We’ve shattered the wall between structured text and free-form drawing. Scribble directly over your notes. One canvas, infinite possibilities.
-- **AI-First Local Architecture:** Privacy isn't a feature; it's a right. Our on-device AI (SmolLM-135M) summarizes and rewrites your thoughts without a single packet leaving your machine.
-- **Unrivaled Persistence:** Every pixel, every character, every stroke is saved instantly. Zero data loss. Zero friction.
-- **Desktop Dominance:** Engineered for Fedora/GNOME to remain visible across all workspaces. It’s always there, precisely when you need it.
+## 🛠️ Tech Stack
+- **Frontend:** Next.js 15, TypeScript, Tailwind CSS.
+- **AI Engine:** Transformers.js (Running Qwen2.5-0.5B).
+- **Desktop Shell:** Electron integration for a native experience.
+- **Storage:** Browser LocalStorage / IndexedDB.
 
-## 🛠️ The Growth Strategy (Roadmap)
-
-### Phase 1: Foundations of Excellence (Completed ✅)
-- [x] **Core Engine:** High-performance Next.js text processor.
-- [x] **Instant State Sync:** Sub-millisecond `localStorage` persistence.
-- [x] **Aesthetic Integrity:** Modern UI powered by Geist and Tailwind.
-
-### Phase 2: System Integration (Completed ✅)
-- [x] **Native Wrapper:** Electron-optimized for low-latency desktop performance.
-- [x] **"Always-On" Protocol:** System-level priority windowing.
-- [x] **Workspace Omnipresence:** Visible across every activity and desktop.
-
-### Phase 3: Cognitive Expansion (Completed ✅)
-- [x] **Hybrid Scribble Mode:** Unified drawing and typing experience.
-- [x] **Fixed-Focus Editor:** Zero-drift cursor logic for maximum typing flow.
-- [x] **Visual Hierarchy:** Precision color-coding and high-impact highlighting.
-- [x] **Offline AI Toolbox:** Local summarization and clarity enhancement.
-
-### Phase 4: Scaling & Optimization (Accelerating 🏎️)
-- [ ] **Native Linux Deployment:** One-click `.desktop` integration.
-- [ ] **Power-User Shortcuts:** Keyboard-first navigation for peak efficiency.
-- [ ] **Multi-Monitor Synergy:** Intelligent window positioning logic.
-
-## 🏃 Join the Revolution
-
-### 1. Secure the Dependencies
-```bash
-npm install
-```
-
-### 2. Launch the Future
-```bash
-npm run electron-dev
-```
-
-### 3. Build the Enterprise
-```bash
-npm run build
-```
+## 🚦 Getting Started
+1. **Install Dependencies:** `npm install`
+2. **Run Development:** `npm run dev`
+3. **Build Desktop App:** `npm run electron-dev`
 
 ---
-*PINNOTE: Built by developers, for the architects of tomorrow.*
+*Pinnote: Think faster, locally.*
