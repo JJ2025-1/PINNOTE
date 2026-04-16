@@ -2,6 +2,47 @@
 
 import { useState, useEffect, useRef } from "react";
 
+// --- TYPES FOR SPEECH RECOGNITION ---
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onend: () => void;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionResultList {
+  length: number;
+  item(index: number): SpeechRecognitionResult;
+  [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  length: number;
+  item(index: number): SpeechRecognitionAlternative;
+  [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  transcript: string;
+  confidence: number;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message: string;
+}
+
 const COLORS = {
   green: "#22c55e",
   red: "#ef4444",
@@ -122,6 +163,133 @@ export default function Home() {
     }
   }, [noteHtml, isLoading, isScribbleMode]);
 
+  const [isRecording, setIsRecording] = useState(false);
+  const [interimTranscript, setInterimTranscript] = useState("");
+  const recordingRef = useRef(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  // Update ref when state changes
+  useEffect(() => {
+    recordingRef.current = isRecording;
+  }, [isRecording]);
+
+  // --- SPEECH RECOGNITION ---
+  useEffect(() => {
+    if (typeof window !== "undefined" && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
+      const SpeechRecognitionImpl = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognitionImpl() as SpeechRecognition;
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = (typeof navigator !== "undefined" ? navigator.language : "en-US");
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        let finalTranscript = "";
+        let currentInterim = "";
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            currentInterim += transcript;
+          }
+        }
+
+        setInterimTranscript(currentInterim);
+
+        if (finalTranscript && editorRef.current) {
+          editorRef.current.focus();
+          const selection = window.getSelection();
+          if (selection && selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0);
+            
+            // If the cursor is not inside the editor, we might want to append to the end
+            const container = range.commonAncestorContainer;
+            const isInside = editorRef.current.contains(container);
+
+            if (isInside) {
+              const textNode = document.createTextNode(finalTranscript + " ");
+              range.insertNode(textNode);
+              range.collapse(false);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            } else {
+              editorRef.current.innerHTML += finalTranscript + " ";
+            }
+          } else {
+            editorRef.current.innerHTML += finalTranscript + " ";
+          }
+          handleInput();
+        }
+      };
+
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
+        // Handle common non-fatal errors silently to avoid console noise in long sessions
+        if (event.error === 'no-speech' || event.error === 'network') {
+          console.warn(`Speech recognition (recoverable): ${event.error}`);
+          return;
+        }
+
+        console.error("Speech recognition fatal error:", event.error);
+        setIsRecording(false);
+      };
+
+      recognition.onend = () => {
+        if (recordingRef.current) {
+          // Add a small delay before restarting to be gentler on the network/API
+          // and to avoid rapid-fire restart loops.
+          setTimeout(() => {
+            if (recordingRef.current) {
+              try {
+                // Double check if already started to avoid InvalidStateError
+                recognition.start();
+              } catch (e) {
+                // If it's already started, we're fine. Otherwise, log and reset.
+                if ((e as Error).name !== 'InvalidStateError') {
+                  console.error("Failed to restart recognition:", e);
+                  setIsRecording(false);
+                }
+              }
+            }
+          }, 1000);
+        }
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
+  const toggleRecording = () => {
+    if (!recognitionRef.current) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
+
+    if (isRecording) {
+      try {
+        recognitionRef.current.stop();
+      } catch (e) {
+        console.error("Error stopping recognition:", e);
+      }
+      setIsRecording(false);
+      setInterimTranscript("");
+    } else {
+      try {
+        recognitionRef.current.start();
+        setIsRecording(true);
+      } catch (e) {
+        console.error("Error starting recognition:", e);
+        // If it was already started, just sync the state
+        if ((e as Error).name === 'InvalidStateError') {
+          setIsRecording(true);
+        } else {
+          setIsRecording(false);
+          alert("Could not start microphone. Please check permissions.");
+        }
+      }
+    }
+  };
+
   // --- TEXT FORMATTING ---
   const formatText = (command: string, value: string) => {
     // Focus the editor first to ensure command applies correctly
@@ -159,10 +327,18 @@ export default function Home() {
     lastPos.current = pos;
   };
 
-  const getPos = (e: any) => {
+  const getPos = (e: React.MouseEvent | React.TouchEvent) => {
     const rect = canvasRef.current!.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    let clientX: number;
+    let clientY: number;
+
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+    } else {
+      clientX = (e as React.MouseEvent).clientX;
+      clientY = (e as React.MouseEvent).clientY;
+    }
     
     const scaleX = canvasRef.current!.width / rect.width;
     const scaleY = canvasRef.current!.height / rect.height;
@@ -226,6 +402,23 @@ export default function Home() {
         <div className="flex items-center gap-4 px-4 py-2 overflow-x-auto no-scrollbar">
           {!isScribbleMode ? (
             <>
+              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
+                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Quick Note:</span>
+                <button 
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={toggleRecording} 
+                  className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all ${isRecording ? "bg-red-500 text-white animate-pulse" : "bg-zinc-200 dark:bg-zinc-800"}`}
+                >
+                  <div className={`w-2 h-2 rounded-full ${isRecording ? "bg-white" : "bg-red-500"}`} />
+                  {isRecording ? "LISTENING..." : "START VOICE NOTE"}
+                </button>
+                {isRecording && interimTranscript && (
+                  <div className="ml-2 px-2 py-1 bg-black/5 dark:bg-white/5 rounded border border-black/5 dark:border-white/5 max-w-[200px] truncate">
+                    <span className="text-[10px] italic opacity-50 whitespace-nowrap">{interimTranscript}</span>
+                  </div>
+                )}
+              </div>
+
               <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
                 <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
                 {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (

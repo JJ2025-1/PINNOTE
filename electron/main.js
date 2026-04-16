@@ -21,6 +21,14 @@ function createWindow() {
     },
   });
 
+  // Handle permission requests for microphone
+  mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+    if (permission === 'media') {
+      return callback(true);
+    }
+    callback(false);
+  });
+
   // Level 'screen-saver' or 'pop-up-menu' ensures it stays above almost everything
   mainWindow.setAlwaysOnTop(true, 'screen-saver', 1);
   
