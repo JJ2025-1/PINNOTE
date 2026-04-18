@@ -43,6 +43,16 @@ interface SpeechRecognitionErrorEvent extends Event {
   message: string;
 }
 
+interface ElectronAPI {
+  openFile: () => Promise<{ success: boolean; path?: string; reason?: string }>;
+}
+
+declare global {
+  interface Window {
+    electron: ElectronAPI;
+  }
+}
+
 const COLORS = {
   green: "#22c55e",
   red: "#ef4444",
@@ -114,6 +124,63 @@ export default function Home() {
       const html = editorRef.current.innerHTML;
       lastHtml.current = html;
       setNoteHtml(html);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        const blob = items[i].getAsFile();
+        if (blob) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            if (event.target?.result) {
+              document.execCommand('insertImage', false, event.target.result as string);
+              handleInput();
+            }
+          };
+          reader.readAsDataURL(blob);
+          e.preventDefault();
+        }
+      }
+    }
+  };
+
+  const handleEditorMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'IMG') {
+      const rect = target.getBoundingClientRect();
+      // Check if clicking near the bottom-right corner (20px threshold)
+      const isCorner = (e.clientX > rect.right - 25) && (e.clientY > rect.bottom - 25);
+      
+      if (isCorner) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const startX = e.clientX;
+        const startWidth = rect.width;
+        const img = target as HTMLImageElement;
+        
+        // Use document listeners for smooth dragging outside the element
+        const onMouseMove = (moveEvent: MouseEvent) => {
+          const delta = moveEvent.clientX - startX;
+          const newWidth = Math.max(50, startWidth + delta);
+          img.style.width = `${newWidth}px`;
+          img.style.height = 'auto'; // Maintain aspect ratio
+        };
+        
+        const onMouseUp = () => {
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+          handleInput(); // Save changes to localStorage
+          img.style.outline = "";
+        };
+        
+        img.style.outline = "2px solid #3b82f6";
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      }
     }
   };
 
@@ -359,6 +426,32 @@ export default function Home() {
     }
   };
 
+  const handleOpenFile = async () => {
+    if (typeof window !== "undefined" && window.electron) {
+      try {
+        const result = await window.electron.openFile();
+        if (result && result.success && editorRef.current) {
+          editorRef.current.focus();
+          
+          if (result.type === 'image') {
+            document.execCommand('insertImage', false, result.data);
+          } else if (result.type === 'html') {
+            document.execCommand('insertHTML', false, result.data);
+          } else if (result.type === 'text') {
+            document.execCommand('insertText', false, result.data);
+          }
+          handleInput();
+        } else if (result && !result.success && result.reason === 'permission_denied') {
+          console.log("File open canceled: permission denied");
+        }
+      } catch (error) {
+        console.error("Error opening file:", error);
+      }
+    } else {
+      alert("Opening files from local system is only available in the desktop version.");
+    }
+  };
+
   const clearCanvas = () => {
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx && canvasRef.current) {
@@ -375,6 +468,19 @@ export default function Home() {
       <div className="flex items-center justify-between px-4 py-2 border-b border-black/[.08] dark:border-white/[.145] bg-background/50">
         <div className="flex items-center gap-4">
           <h1 className="text-xs font-bold tracking-widest opacity-50">PINNOTE</h1>
+          <button 
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={handleOpenFile}
+            className="px-2 py-1 text-[9px] font-bold bg-black/[.05] dark:bg-white/[.05] rounded hover:bg-black/[.1] dark:hover:bg-white/[.1] transition-all flex items-center gap-1.5"
+          >
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="15" y2="15"></line>
+            </svg>
+            OPEN FILE
+          </button>
           <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
              <button 
                onMouseDown={(e) => e.preventDefault()}
@@ -473,6 +579,8 @@ export default function Home() {
             ref={editorRef}
             contentEditable={!isScribbleMode}
             onInput={handleInput}
+            onPaste={handlePaste}
+            onMouseDown={handleEditorMouseDown}
             className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
             style={{ direction: 'ltr', textAlign: 'left' }}
           />
@@ -492,6 +600,36 @@ export default function Home() {
 
       <style jsx>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
+      `}</style>
+      <style jsx global>{`
+        .prose img {
+          position: relative;
+          display: inline-block;
+          max-width: 100%;
+          cursor: default;
+          transition: outline 0.1s ease;
+          border-radius: 4px;
+        }
+        .prose img:hover {
+          outline: 2px solid rgba(59, 130, 246, 0.5);
+          cursor: pointer;
+        }
+        /* Visual indicator for the resize corner */
+        .prose img::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 15px;
+          height: 15px;
+          background: linear-gradient(135deg, transparent 50%, #3b82f6 50%);
+          cursor: nwse-resize;
+          pointer-events: none;
+        }
+        /* Make sure the mouse cursor changes when hovering the corner */
+        .prose img {
+          cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>'), auto;
+        }
       `}</style>
     </main>
   );
