@@ -9,6 +9,8 @@ Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic 
 - **Hybrid Canvas:** A unified layer where text and digital ink coexist seamlessly.
 - **Zero-Latency Scribble:** Optimized canvas rendering for a natural drawing experience.
 - **Quick Note Taking (Speech to Text):** Optimized for classroom and long-form lectures. High-accuracy transcription with continuous recording and real-time live feedback.
+- **Local File Support:** Open and import `.docx` documents, images, and text files directly into your notes with secure permission prompts.
+- **Fast Image Resizing:** High-performance drag-to-resize logic for images with real-time visual feedback.
 - **Privacy by Design:** No cloud sync, no data tracking. Your notes stay in your browser's local storage.
 - **Contextual Tools:** Dynamic toolbars that switch between Text formatting and Scribble controls based on your current mode.
 
@@ -26,3 +28,5 @@ Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic 
 
 ---
 *Pinnote: Think faster, locally.*
+
+**Last Updated:** Saturday, April 18, 2026
