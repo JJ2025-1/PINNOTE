@@ -1,6 +1,7 @@
 {
-  "name": "pinnote",
-  "version": "0.1.0",
+  "name": "pinnote-ai",
+  "version": "0.2.0",
+  "description": "Hybrid AI-Powered Notepad with Scribble support and built-in Compiler.",
   "private": true,
   "main": "electron/main.js",
   "scripts": {
