@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Code2, Play, Terminal, Info, Loader2 } from "lucide-react";
+import { Code2, Play, Terminal, Info, Loader2, Trash2 } from "lucide-react";
 
 export default function Compiler() {
   const [code, setCode] = useState("// Type your code here\nconsole.log('Hello, Pinnote!');");
@@ -23,11 +23,25 @@ export default function Compiler() {
     }, 1000);
   };
 
+  const clearAll = () => {
+    setCode("");
+    setOutput("");
+  };
+
   return (
     <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-900 border-l border-black/[.05] dark:border-white/[.05] w-96 p-4 shadow-2xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Code2 className="w-4 h-4 text-green-500" />
-        <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">Compiler (Coming Soon)</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Code2 className="w-4 h-4 text-green-500" />
+          <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">Compiler (Coming Soon)</h2>
+        </div>
+        <button 
+          onClick={clearAll}
+          className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all opacity-30 hover:opacity-100 text-red-500"
+          title="Clear All"
+        >
+          <Trash2 className="w-3 h-3" />
+        </button>
       </div>
       
       <div className="flex-1 flex flex-col gap-4 overflow-hidden">
