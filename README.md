@@ -7,8 +7,9 @@ Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic 
 
 ## ✨ Core Features
 - **Hybrid Canvas:** A unified layer where text and digital ink coexist seamlessly.
-- **AI-Powered Text Editor:** Integrated AI assistance for summarizing, expanding, and refining your notes locally.
-- **Compiler Feature (Coming Soon):** Run and test code snippets directly within your notes.
+- **AI-Powered Text Editor:** Integrated AI assistance for summarizing, expanding, and refining your notes locally (v0.2.0).
+- **Interactive Compiler:** Built-in code editor and execution environment (v0.2.0).
+- **Animated UI:** Smooth transitions and modern interface using Framer Motion.
 - **Zero-Latency Scribble:** Optimized canvas rendering for a natural drawing experience.
 - **Quick Note Taking (Speech to Text):** Optimized for classroom and long-form lectures. High-accuracy transcription with continuous recording and real-time live feedback.
 - **Local File Support:** Open and import `.docx` documents, images, and text files directly into your notes.
