@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Sparkles, FileText, Zap, CheckCircle, Send, Loader2 } from "lucide-react";
 
 export default function AiAssistant() {
   const [prompt, setPrompt] = useState("");
@@ -17,29 +18,35 @@ export default function AiAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-900 border-l border-black/[.05] dark:border-white/[.05] w-80 p-4">
-      <h2 className="text-xs font-bold tracking-widest opacity-50 mb-4 uppercase">AI Assistant</h2>
+    <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-900 border-l border-black/[.05] dark:border-white/[.05] w-80 p-4 shadow-2xl">
+      <div className="flex items-center gap-2 mb-6">
+        <Sparkles className="w-4 h-4 text-blue-500" />
+        <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">AI Assistant</h2>
+      </div>
       
-      <div className="flex flex-col gap-2 mb-4">
+      <div className="flex flex-col gap-2 mb-6">
         <button 
           onClick={() => handleAiAction("Summarize")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-blue-500 text-white rounded hover:bg-blue-600 transition-all disabled:opacity-50"
+          className="px-3 py-2 text-[10px] font-bold bg-blue-500 text-white rounded hover:bg-blue-600 transition-all disabled:opacity-50 flex items-center gap-2"
         >
+          <FileText className="w-3 h-3" />
           SUMMARIZE NOTE
         </button>
         <button 
           onClick={() => handleAiAction("Expand")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-purple-500 text-white rounded hover:bg-purple-600 transition-all disabled:opacity-50"
+          className="px-3 py-2 text-[10px] font-bold bg-purple-500 text-white rounded hover:bg-purple-600 transition-all disabled:opacity-50 flex items-center gap-2"
         >
+          <Zap className="w-3 h-3" />
           EXPAND THOUGHTS
         </button>
         <button 
           onClick={() => handleAiAction("Fix Grammar")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-green-500 text-white rounded hover:bg-green-600 transition-all disabled:opacity-50"
+          className="px-3 py-2 text-[10px] font-bold bg-green-500 text-white rounded hover:bg-green-600 transition-all disabled:opacity-50 flex items-center gap-2"
         >
+          <CheckCircle className="w-3 h-3" />
           FIX GRAMMAR
         </button>
       </div>
@@ -49,7 +56,7 @@ export default function AiAssistant() {
         <div className="flex-1 p-3 bg-white dark:bg-zinc-800 rounded border border-black/[.05] dark:border-white/[.05] overflow-y-auto">
           {isProcessing ? (
             <div className="flex items-center gap-2 text-[10px] italic opacity-50">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
               AI is thinking...
             </div>
           ) : (
@@ -65,13 +72,14 @@ export default function AiAssistant() {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Ask AI anything..."
-          className="w-full h-20 p-2 text-[11px] bg-white dark:bg-zinc-800 rounded border border-black/[.05] dark:border-white/[.05] outline-none focus:ring-1 ring-blue-500 transition-all"
+          className="w-full h-20 p-2 text-[11px] bg-white dark:bg-zinc-800 rounded border border-black/[.05] dark:border-white/[.05] outline-none focus:ring-1 ring-blue-500 transition-all shadow-inner"
         />
         <button 
           onClick={() => handleAiAction("Custom Prompt")}
           disabled={!prompt || isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-black dark:bg-white dark:text-black text-white rounded hover:opacity-80 transition-all disabled:opacity-30"
+          className="px-3 py-2 text-[10px] font-bold bg-black dark:bg-white dark:text-black text-white rounded hover:opacity-80 transition-all disabled:opacity-30 flex items-center justify-center gap-2 shadow-lg"
         >
+          <Send className="w-3 h-3" />
           SEND
         </button>
       </div>
