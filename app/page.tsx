@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Sparkles, Code2, Type, Pencil, FileUp, Save } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import AiAssistant from "@/components/AiAssistant";
 import Compiler from "@/components/Compiler";
 import About from "@/components/About";
@@ -623,8 +624,30 @@ export default function Home() {
         </div>
 
         {/* Right Panels */}
-        {rightPanelMode === "ai" && <AiAssistant />}
-        {rightPanelMode === "compiler" && <Compiler />}
+        <AnimatePresence mode="wait">
+          {rightPanelMode === "ai" && (
+            <motion.div
+              key="ai"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 300, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            >
+              <AiAssistant />
+            </motion.div>
+          )}
+          {rightPanelMode === "compiler" && (
+            <motion.div
+              key="compiler"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 300, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            >
+              <Compiler />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <About />
