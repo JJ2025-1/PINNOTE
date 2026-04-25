@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, FileText, Zap, CheckCircle, Send, Loader2 } from "lucide-react";
+import { Sparkles, FileText, Zap, CheckCircle, Send, Loader2, RefreshCw } from "lucide-react";
 
 export default function AiAssistant() {
   const [prompt, setPrompt] = useState("");
@@ -17,11 +17,25 @@ export default function AiAssistant() {
     }, 1500);
   };
 
+  const clearResponse = () => {
+    setResponse("");
+    setPrompt("");
+  };
+
   return (
     <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-900 border-l border-black/[.05] dark:border-white/[.05] w-80 p-4 shadow-2xl">
-      <div className="flex items-center gap-2 mb-6">
-        <Sparkles className="w-4 h-4 text-blue-500" />
-        <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">AI Assistant</h2>
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-blue-500" />
+          <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">AI Assistant</h2>
+        </div>
+        <button 
+          onClick={clearResponse}
+          className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all opacity-30 hover:opacity-100"
+          title="Clear"
+        >
+          <RefreshCw className="w-3 h-3" />
+        </button>
       </div>
       
       <div className="flex flex-col gap-2 mb-6">
