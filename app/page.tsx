@@ -500,6 +500,22 @@ export default function Home() {
                SCRIBBLE
              </button>
           </div>
+          <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
+             <button 
+               onMouseDown={(e) => e.preventDefault()}
+               onClick={() => setRightPanelMode(rightPanelMode === "ai" ? "none" : "ai")} 
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${rightPanelMode === "ai" ? "bg-white dark:bg-zinc-800 shadow-sm text-blue-500" : "opacity-50"}`}
+             >
+               AI ASSISTANT
+             </button>
+             <button 
+               onMouseDown={(e) => e.preventDefault()}
+               onClick={() => setRightPanelMode(rightPanelMode === "compiler" ? "none" : "compiler")} 
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${rightPanelMode === "compiler" ? "bg-white dark:bg-zinc-800 shadow-sm text-green-500" : "opacity-50"}`}
+             >
+               COMPILER
+             </button>
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
