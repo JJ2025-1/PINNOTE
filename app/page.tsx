@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { Sparkles, Code2, Type, Pencil, FileUp } from "lucide-react";
 import AiAssistant from "@/components/AiAssistant";
 import Compiler from "@/components/Compiler";
 
@@ -476,27 +477,24 @@ export default function Home() {
             onClick={handleOpenFile}
             className="px-2 py-1 text-[9px] font-bold bg-black/[.05] dark:bg-white/[.05] rounded hover:bg-black/[.1] dark:hover:bg-white/[.1] transition-all flex items-center gap-1.5"
           >
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14 2 14 8 20 8"></polyline>
-              <line x1="12" y1="18" x2="12" y2="12"></line>
-              <line x1="9" y1="15" x2="15" y2="15"></line>
-            </svg>
+            <FileUp className="w-3 h-3" />
             OPEN FILE
           </button>
           <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(false)} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${!isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${!isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
              >
+               <Type className="w-3 h-3" />
                TEXT
              </button>
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(true)} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
              >
+               <Pencil className="w-3 h-3" />
                SCRIBBLE
              </button>
           </div>
@@ -504,15 +502,17 @@ export default function Home() {
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setRightPanelMode(rightPanelMode === "ai" ? "none" : "ai")} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${rightPanelMode === "ai" ? "bg-white dark:bg-zinc-800 shadow-sm text-blue-500" : "opacity-50"}`}
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${rightPanelMode === "ai" ? "bg-white dark:bg-zinc-800 shadow-sm text-blue-500" : "opacity-50"}`}
              >
+               <Sparkles className="w-3 h-3" />
                AI ASSISTANT
              </button>
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setRightPanelMode(rightPanelMode === "compiler" ? "none" : "compiler")} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${rightPanelMode === "compiler" ? "bg-white dark:bg-zinc-800 shadow-sm text-green-500" : "opacity-50"}`}
+               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${rightPanelMode === "compiler" ? "bg-white dark:bg-zinc-800 shadow-sm text-green-500" : "opacity-50"}`}
              >
+               <Code2 className="w-3 h-3" />
                COMPILER
              </button>
           </div>
