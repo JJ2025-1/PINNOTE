@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Sparkles, Code2, Type, Pencil, FileUp } from "lucide-react";
+import { Sparkles, Code2, Type, Pencil, FileUp, Save } from "lucide-react";
 import AiAssistant from "@/components/AiAssistant";
 import Compiler from "@/components/Compiler";
 
@@ -518,7 +518,10 @@ export default function Home() {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-black/[.03] dark:bg-white/[.03] rounded">
+            <Save className={`w-3 h-3 ${saveStatus === "Saving..." ? "text-blue-500 animate-pulse" : "opacity-30"}`} />
+            <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
+          </div>
         </div>
       </div>
 
