@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Sparkles, Code2, Type, Pencil, FileUp, Save } from "lucide-react";
 import AiAssistant from "@/components/AiAssistant";
 import Compiler from "@/components/Compiler";
+import About from "@/components/About";
 
 // --- TYPES FOR SPEECH RECOGNITION ---
 interface SpeechRecognition extends EventTarget {
@@ -625,6 +626,8 @@ export default function Home() {
         {rightPanelMode === "ai" && <AiAssistant />}
         {rightPanelMode === "compiler" && <Compiler />}
       </div>
+
+      <About />
 
       <style jsx>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
