@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import AiAssistant from "@/components/AiAssistant";
+import Compiler from "@/components/Compiler";
 
 // --- TYPES FOR SPEECH RECOGNITION ---
 interface SpeechRecognition extends EventTarget {
@@ -71,6 +73,7 @@ export default function Home() {
   const [selectedColor, setSelectedColor] = useState(COLORS.red);
   const [selectedHighlight, setSelectedHighlight] = useState(COLORS.none);
   const [selectedPen, setSelectedPen] = useState(COLORS.green);
+  const [rightPanelMode, setRightPanelMode] = useState<"none" | "ai" | "compiler">("none");
   
   const editorRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
