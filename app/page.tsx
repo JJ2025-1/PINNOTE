@@ -592,29 +592,35 @@ export default function Home() {
       </div>
 
       {/* Integrated Editor Content */}
-      <div className="flex-1 relative bg-white dark:bg-zinc-950 overflow-y-auto" ref={scrollContainerRef}>
-        <div className="relative min-h-full p-8" style={{ direction: 'ltr', textAlign: 'left' }}>
-          <div
-            ref={editorRef}
-            contentEditable={!isScribbleMode}
-            onInput={handleInput}
-            onPaste={handlePaste}
-            onMouseDown={handleEditorMouseDown}
-            className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
-            style={{ direction: 'ltr', textAlign: 'left' }}
-          />
-          <canvas
-            ref={canvasRef}
-            className={`absolute top-0 left-0 w-full h-full z-20 ${isScribbleMode ? "cursor-crosshair pointer-events-auto" : "pointer-events-none"}`}
-            onMouseDown={startDrawing}
-            onMouseMove={draw}
-            onMouseUp={() => isDrawing.current = false}
-            onMouseLeave={() => isDrawing.current = false}
-            onTouchStart={startDrawing}
-            onTouchMove={draw}
-            onTouchEnd={() => isDrawing.current = false}
-          />
+      <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 relative bg-white dark:bg-zinc-950 overflow-y-auto" ref={scrollContainerRef}>
+          <div className="relative min-h-full p-8" style={{ direction: 'ltr', textAlign: 'left' }}>
+            <div
+              ref={editorRef}
+              contentEditable={!isScribbleMode}
+              onInput={handleInput}
+              onPaste={handlePaste}
+              onMouseDown={handleEditorMouseDown}
+              className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
+              style={{ direction: 'ltr', textAlign: 'left' }}
+            />
+            <canvas
+              ref={canvasRef}
+              className={`absolute top-0 left-0 w-full h-full z-20 ${isScribbleMode ? "cursor-crosshair pointer-events-auto" : "pointer-events-none"}`}
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={() => isDrawing.current = false}
+              onMouseLeave={() => isDrawing.current = false}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={() => isDrawing.current = false}
+            />
+          </div>
         </div>
+
+        {/* Right Panels */}
+        {rightPanelMode === "ai" && <AiAssistant />}
+        {rightPanelMode === "compiler" && <Compiler />}
       </div>
 
       <style jsx>{`
