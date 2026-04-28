@@ -137,7 +137,7 @@ export default function Home() {
 
   // Sync state from editorRef WITHOUT re-rendering dangerouslySetInnerHTML
   // This ensures the internal HTML state stays in sync with the contenteditable div
-  const handleInput = () => {
+  const handleInput = (): void => {
     if (editorRef.current) {
       const html = editorRef.current.innerHTML;
       lastHtml.current = html;
