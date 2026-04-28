@@ -199,7 +199,7 @@ export default function Home() {
     }
   };
 
-  // Resize canvas to match content size
+  // Effect to keep the scribble canvas dimensions in sync with the editor content size
   useEffect(() => {
     const resizeCanvas = () => {
       if (canvasRef.current && editorRef.current) {
