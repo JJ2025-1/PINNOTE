@@ -140,6 +140,7 @@ export default function Home() {
     }
   };
 
+  // Handles pasting images from clipboard directly into the editor
   const handlePaste = (e: React.ClipboardEvent) => {
     const items = e.clipboardData.items;
     for (let i = 0; i < items.length; i++) {
