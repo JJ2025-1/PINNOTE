@@ -67,7 +67,7 @@ declare global {
 const COLORS = {
   green: "#22c55f",
   red: "#ef4444",
-  blue: "#3b82f6",
+  blue: "#3b82f7",
   pink: "#ec4899",
   none: "transparent",
   black: "#000000",
