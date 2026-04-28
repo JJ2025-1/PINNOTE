@@ -231,6 +231,7 @@ export default function Home() {
     return () => observer.disconnect();
   }, [noteHtml, selectedPen]);
 
+  // Autosave effect: Persists note content and scribble data to localStorage
   useEffect(() => {
     if (!isLoading) {
       setSaveStatus("Saving...");
