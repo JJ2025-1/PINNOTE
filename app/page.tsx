@@ -375,7 +375,8 @@ export default function Home() {
     }
   };
 
-  // --- TEXT FORMATTING ---
+  // --- TEXT FORMATTING HELPERS ---
+  // Wrapper for document.execCommand to apply styles to selected text
   const formatText = (command: string, value: string) => {
     // Focus the editor first to ensure command applies correctly
     if (editorRef.current) {
