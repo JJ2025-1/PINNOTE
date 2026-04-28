@@ -2,6 +2,10 @@
 
 import { Info, Mail, Github, ExternalLink, Share2 } from "lucide-react";
 
+/**
+ * About component displays information about the Pinnote project,
+ * including versioning and developer credits.
+ */
 export default function About() {
   const handleShare = () => {
     if (navigator.share) {
