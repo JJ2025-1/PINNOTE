@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+/* THEME DESIGN TOKENS */
 :root {
   --background: #0a0a0c;
   --foreground: #f4f4f5;
