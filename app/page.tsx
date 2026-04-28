@@ -449,6 +449,7 @@ export default function Home() {
     }
   };
 
+  // Opens a file dialog via Electron IPC to import local content
   const handleOpenFile = async () => {
     if (typeof window !== "undefined" && window.electron) {
       try {
