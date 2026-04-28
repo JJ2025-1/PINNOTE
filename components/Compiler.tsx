@@ -28,6 +28,7 @@ export default function Compiler() {
     }, 1000);
   };
 
+  // Clears both the source code editor and the console output
   const clearAll = () => {
     setCode("");
     setOutput("");
