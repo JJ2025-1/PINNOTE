@@ -496,7 +496,7 @@ export default function Home() {
     <main className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-3 border-b border-white/10 glass-dark z-50">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-[23px]">
           <h1 className="text-sm font-black tracking-[0.2em] text-primary drop-shadow-[0_0_8px_rgba(0,209,255,0.5)]">PINNOTE</h1>
           <button 
             onMouseDown={(e) => e.preventDefault()}
