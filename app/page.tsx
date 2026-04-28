@@ -695,7 +695,7 @@ export default function Home() {
           display: inline-block;
           max-width: 100%;
           cursor: default;
-          transition: outline 0.1s ease;
+          transition: outline 0.15s ease;
           border-radius: 4px;
         }
         .prose img:hover {
