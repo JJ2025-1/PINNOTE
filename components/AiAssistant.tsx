@@ -23,77 +23,79 @@ export default function AiAssistant() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-zinc-50 dark:bg-zinc-900 border-l border-black/[.05] dark:border-white/[.05] w-80 p-4 shadow-2xl">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-blue-500" />
-          <h2 className="text-xs font-bold tracking-widest opacity-50 uppercase">AI Assistant</h2>
+    <div className="flex flex-col h-full glass border-l border-white/10 w-80 p-6 shadow-2xl relative z-50">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-1.5 bg-blue-500/20 rounded-lg">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+          </div>
+          <h2 className="text-[10px] font-black tracking-[0.2em] text-blue-400 uppercase">AI ASSISTANT</h2>
         </div>
         <button 
           onClick={clearResponse}
-          className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-all opacity-30 hover:opacity-100"
+          className="p-2 hover:bg-white/5 rounded-full transition-all opacity-30 hover:opacity-100 group"
           title="Clear"
         >
-          <RefreshCw className="w-3 h-3" />
+          <RefreshCw className="w-3.5 h-3.5 group-hover:rotate-180 transition-transform duration-500" />
         </button>
       </div>
       
-      <div className="flex flex-col gap-2 mb-6">
+      <div className="flex flex-col gap-3 mb-8">
         <button 
           onClick={() => handleAiAction("Summarize")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-blue-500 text-white rounded hover:bg-blue-600 transition-all disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2.5 text-[10px] font-black tracking-wider bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 hover:bg-blue-500 hover:text-white transition-all disabled:opacity-50 flex items-center gap-3 group"
         >
-          <FileText className="w-3 h-3" />
+          <FileText className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
           SUMMARIZE NOTE
         </button>
         <button 
           onClick={() => handleAiAction("Expand")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-purple-500 text-white rounded hover:bg-purple-600 transition-all disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2.5 text-[10px] font-black tracking-wider bg-purple-500/10 text-purple-400 rounded-xl border border-purple-500/20 hover:bg-purple-500 hover:text-white transition-all disabled:opacity-50 flex items-center gap-3 group"
         >
-          <Zap className="w-3 h-3" />
+          <Zap className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
           EXPAND THOUGHTS
         </button>
         <button 
           onClick={() => handleAiAction("Fix Grammar")}
           disabled={isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-green-500 text-white rounded hover:bg-green-600 transition-all disabled:opacity-50 flex items-center gap-2"
+          className="px-4 py-2.5 text-[10px] font-black tracking-wider bg-green-500/10 text-green-400 rounded-xl border border-green-500/20 hover:bg-green-500 hover:text-white transition-all disabled:opacity-50 flex items-center gap-3 group"
         >
-          <CheckCircle className="w-3 h-3" />
+          <CheckCircle className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
           FIX GRAMMAR
         </button>
       </div>
 
-      <div className="flex-1 flex flex-col gap-2 overflow-hidden">
-        <div className="text-[9px] font-bold opacity-30 uppercase">Response:</div>
-        <div className="flex-1 p-3 bg-white dark:bg-zinc-800 rounded border border-black/[.05] dark:border-white/[.05] overflow-y-auto">
+      <div className="flex-1 flex flex-col gap-3 overflow-hidden">
+        <div className="text-[9px] font-black opacity-30 uppercase tracking-[0.2em] ml-1">Response</div>
+        <div className="flex-1 p-4 bg-black/40 rounded-2xl border border-white/5 overflow-y-auto custom-scrollbar shadow-inner backdrop-blur-md">
           {isProcessing ? (
-            <div className="flex items-center gap-2 text-[10px] italic opacity-50">
-              <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
-              AI is thinking...
+            <div className="flex flex-col items-center justify-center h-full gap-4 text-[10px] font-black italic text-blue-400/50">
+              <Loader2 className="w-6 h-6 animate-spin" />
+              THINKING...
             </div>
           ) : (
-            <p className="text-[11px] leading-relaxed opacity-70">
+            <p className="text-[12px] leading-relaxed text-foreground/70">
               {response || "Select an action above or highlight text to start."}
             </p>
           )}
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-2">
+      <div className="mt-6 flex flex-col gap-3">
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="Ask AI anything..."
-          className="w-full h-20 p-2 text-[11px] bg-white dark:bg-zinc-800 rounded border border-black/[.05] dark:border-white/[.05] outline-none focus:ring-1 ring-blue-500 transition-all shadow-inner"
+          className="w-full h-24 p-4 text-[12px] bg-black/40 rounded-2xl border border-white/5 outline-none focus:border-blue-500/50 focus:ring-4 ring-blue-500/10 transition-all shadow-inner placeholder:opacity-20"
         />
         <button 
           onClick={() => handleAiAction("Custom Prompt")}
           disabled={!prompt || isProcessing}
-          className="px-3 py-2 text-[10px] font-bold bg-black dark:bg-white dark:text-black text-white rounded hover:opacity-80 transition-all disabled:opacity-30 flex items-center justify-center gap-2 shadow-lg"
+          className="px-4 py-3 text-[10px] font-black tracking-[0.2em] bg-white text-black rounded-2xl hover:bg-primary hover:text-primary-foreground transition-all disabled:opacity-10 flex items-center justify-center gap-3 shadow-xl active:scale-95"
         >
-          <Send className="w-3 h-3" />
+          <Send className="w-3.5 h-3.5" />
           SEND
         </button>
       </div>
