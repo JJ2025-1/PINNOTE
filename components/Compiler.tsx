@@ -13,7 +13,7 @@ export default function Compiler() {
   const [isCompiling, setIsCompiling] = useState(false);
 
   // Simulates code execution and captures terminal output
-  const runCode = () => {
+  const runCode = (): void => {
     setIsCompiling(true);
     setTerminalOutput("");
     
