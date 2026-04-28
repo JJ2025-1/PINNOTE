@@ -9,18 +9,18 @@ import { Code2, Play, Terminal, Info, Loader2, Trash2 } from "lucide-react";
  */
 export default function Compiler() {
   const [code, setCode] = useState("// Type your code here\nconsole.log('Hello, Pinnote!');");
-  const [output, setOutput] = useState("");
+  const [terminalOutput, setTerminalOutput] = useState("");
   const [isCompiling, setIsCompiling] = useState(false);
 
   // Simulates code execution and captures terminal output
   const runCode = () => {
     setIsCompiling(true);
-    setOutput("");
+    setTerminalOutput("");
     
     // Placeholder for actual compilation/execution logic
     setTimeout(() => {
       if (code.includes("console.log")) {
-        setOutput("> Hello, Pinnote!\n> Execution complete.");
+        setTerminalOutput("> Hello, Pinnote!\n> Execution complete.");
       } else {
         setOutput("> Execution finished with no output.");
       }
@@ -92,7 +92,7 @@ export default function Compiler() {
             <div className="text-[9px] font-black opacity-30 uppercase tracking-[0.2em]">Console Output</div>
           </div>
           <div className="flex-1 p-5 font-mono text-[11px] bg-black/60 text-zinc-400 rounded-2xl border border-white/5 overflow-y-auto whitespace-pre shadow-inner custom-scrollbar backdrop-blur-md">
-            {output || "Output will appear here..."}
+            {terminalOutput || "Output will appear here..."}
           </div>
         </div>
       </div>
