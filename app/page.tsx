@@ -256,7 +256,8 @@ export default function Home() {
     recordingRef.current = isRecording;
   }, [isRecording]);
 
-  // --- SPEECH RECOGNITION ---
+  // --- SPEECH RECOGNITION INITIALIZATION ---
+  // Configures the Web Speech API for continuous transcription
   useEffect(() => {
     if (typeof window !== "undefined" && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window)) {
       const SpeechRecognitionImpl = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
