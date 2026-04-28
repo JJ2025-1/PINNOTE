@@ -172,6 +172,7 @@ export default function Home() {
     if (target.tagName === 'IMG') {
       const rect = target.getBoundingClientRect();
       // Check if clicking near the bottom-right corner (20px threshold)
+      // Detection logic: Check if the click is within the bottom-right 25px corner of the image
       const isCorner = (e.clientX > rect.right - 25) && (e.clientY > rect.bottom - 25);
       
       if (isCorner) {
