@@ -2,6 +2,7 @@
 
 Pinnote is a high-performance, local-first notepad designed to bridge the gap between structured text, free-form digital ink, and AI-driven creativity. Built for speed and privacy, it provides a seamless unified canvas for your thoughts, now enhanced with intelligent assistance.
 
+---
 ## 🚀 The Vision
 Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic canvas. **Pinnote removes the boundary.** Scribble directly over your typed notes, annotate your thoughts, and leverage AI to expand your cognitive flow.
 
