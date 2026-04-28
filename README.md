@@ -57,6 +57,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 Developed with a focus on local-first productivity.
 For inquiries, contact: **jeevanjanakiraman@gmail.com**
 
+## 📄 License
+MIT License - see LICENSE file for details.
+
 ---
 *Pinnote: Think faster, locally.*
 
