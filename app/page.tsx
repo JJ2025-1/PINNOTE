@@ -177,7 +177,7 @@ export default function Home() {
       
       if (isCorner) {
         e.preventDefault();
-        e.stopPropagation();
+        e.stopPropagation(); // Prevent text selection while resizing
         
         const startX = e.clientX;
         const startWidth = rect.width;
