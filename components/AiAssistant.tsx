@@ -22,6 +22,7 @@ export default function AiAssistant() {
     }, 1500);
   };
 
+  // Resets the AI response and input prompt state
   const clearResponse = () => {
     setResponse("");
     setPrompt("");
