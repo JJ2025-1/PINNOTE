@@ -68,6 +68,11 @@ const COLORS = {
   gray: "#888888"
 };
 
+/**
+ * The main application page for Pinnote.
+ * Handles the unified canvas for text editing and digital ink (scribble mode),
+ * along with AI assistant and compiler integrations.
+ */
 export default function Home() {
   const [isScribbleMode, setIsScribbleMode] = useState(false);
   const [noteHtml, setNoteHtml] = useState("");
