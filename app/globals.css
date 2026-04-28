@@ -71,7 +71,7 @@ body {
 
 /* SCROLLBAR CUSTOMIZATION - Webkit Browsers */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
