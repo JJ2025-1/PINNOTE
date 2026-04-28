@@ -41,6 +41,7 @@
   border-color: var(--border);
 }
 
+/* GLOBAL BODY STYLES */
 body {
   background-color: var(--background);
   background-image: 
