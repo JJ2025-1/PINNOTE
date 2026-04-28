@@ -397,6 +397,7 @@ export default function Home() {
     lastPos.current = pos;
   };
 
+  // Performs the actual drawing on the canvas as the mouse/finger moves
   const draw = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isDrawing.current || !canvasRef.current || !isScribbleMode) return;
     const ctx = canvasRef.current.getContext("2d");
