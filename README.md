@@ -31,6 +31,11 @@ cd pinnote
 npm install
 ```
 
+## 💻 System Requirements
+- Node.js 18.x or later
+- npm or yarn
+- Modern web browser with Web Speech API support
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
