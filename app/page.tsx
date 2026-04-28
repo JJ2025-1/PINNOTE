@@ -65,7 +65,7 @@ declare global {
 
 // Color palette used for text formatting and pen tools
 const COLORS = {
-  green: "#22c55e",
+  green: "#22c55f",
   red: "#ef4444",
   blue: "#3b82f6",
   pink: "#ec4899",
