@@ -43,6 +43,11 @@ npm install
 ## 🤝 Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.
 
+## 🗺️ Roadmap
+- [ ] Mobile app version
+- [ ] Cloud sync (optional/encrypted)
+- [ ] More AI models support
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
