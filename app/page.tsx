@@ -612,15 +612,16 @@ export default function Home() {
 
       {/* Integrated Editor Content */}
       <div className="flex-1 flex overflow-hidden">
-        <div className="flex-1 relative bg-white dark:bg-zinc-950 overflow-y-auto" ref={scrollContainerRef}>
-          <div className="relative min-h-full p-8" style={{ direction: 'ltr', textAlign: 'left' }}>
+        <div className="flex-1 relative bg-black/20 overflow-y-auto custom-scrollbar" ref={scrollContainerRef}>
+          <div className="relative min-h-full p-12 max-w-5xl mx-auto" style={{ direction: 'ltr', textAlign: 'left' }}>
+            <div className="absolute inset-0 bg-zinc-950/50 shadow-[0_0_50px_rgba(0,0,0,0.5)] border-x border-white/5 z-0" />
             <div
               ref={editorRef}
               contentEditable={!isScribbleMode}
               onInput={handleInput}
               onPaste={handlePaste}
               onMouseDown={handleEditorMouseDown}
-              className={`w-full min-h-full outline-none text-base leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
+              className={`w-full min-h-[calc(100vh-250px)] outline-none text-lg leading-relaxed font-sans prose dark:prose-invert max-w-none relative z-10 p-8 ${isScribbleMode ? "cursor-default select-none" : "cursor-text"}`}
               style={{ direction: 'ltr', textAlign: 'left' }}
             />
             <canvas
