@@ -476,6 +476,7 @@ export default function Home() {
     }
   };
 
+  // Wipes all drawing data from the current canvas and local storage
   const clearCanvas = () => {
     const ctx = canvasRef.current?.getContext("2d");
     if (ctx && canvasRef.current) {
