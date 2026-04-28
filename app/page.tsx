@@ -699,7 +699,7 @@ export default function Home() {
           border-radius: 4px;
         }
         .prose img:hover {
-          outline: 2px solid rgba(59, 130, 246, 0.5);
+          outline: 2px solid rgba(59, 130, 246, 0.51);
           cursor: pointer;
         }
         /* Visual indicator for the resize corner */
