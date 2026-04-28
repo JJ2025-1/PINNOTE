@@ -553,7 +553,7 @@ export default function Home() {
 
       {/* Unified Toolbar */}
       <div className="flex flex-col border-b border-white/5 glass z-40">
-        <div className="flex items-center gap-[23px] px-6 py-2 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-[23px] px-6 py-[7px] overflow-x-auto no-scrollbar">
           {!isScribbleMode ? (
             <>
               <div className="flex items-center gap-4 border-r pr-6 border-white/10">
