@@ -708,8 +708,8 @@ export default function Home() {
           position: absolute;
           bottom: 0;
           right: 0;
-          width: 15px;
-          height: 15px;
+          width: 14px;
+          height: 14px;
           background: linear-gradient(135deg, transparent 50%, #3b82f6 50%);
           cursor: nwse-resize;
           pointer-events: none;
