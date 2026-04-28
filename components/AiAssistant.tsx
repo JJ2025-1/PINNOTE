@@ -12,6 +12,7 @@ export default function AiAssistant() {
   const [response, setResponse] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Triggers an AI task such as summarization or grammar correction
   const handleAiAction = (action: string) => {
     setIsProcessing(true);
     // Placeholder for AI logic
