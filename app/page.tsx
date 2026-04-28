@@ -438,6 +438,7 @@ export default function Home() {
     };
   };
 
+  // Updates the current pen color for the scribble tool
   const setPen = (color: string) => {
     setSelectedPen(color);
     const ctx = canvasRef.current?.getContext("2d");
