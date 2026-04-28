@@ -15,7 +15,7 @@ export default function AiAssistant() {
   // Triggers an AI task such as summarization or grammar correction
   const handleAiAction = (aiAction: string) => {
     setIsProcessing(true);
-    // Placeholder for AI logic
+    // Placeholder for AI logic: This will be replaced with actual Local ML calls
     setTimeout(() => {
       setResponse(`AI response for ${aiAction}: This is a placeholder for the actual AI output. Implementation coming soon!`);
       setIsProcessing(false);
