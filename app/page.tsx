@@ -161,6 +161,7 @@ export default function Home() {
     }
   };
 
+  // Handles image resizing logic when clicking on image corners
   const handleEditorMouseDown = (e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (target.tagName === 'IMG') {
