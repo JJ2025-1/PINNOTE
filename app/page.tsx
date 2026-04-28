@@ -415,6 +415,7 @@ export default function Home() {
     lastPos.current = pos;
   };
 
+  // Calculates normalized coordinates for canvas drawing across different devices
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
     const rect = canvasRef.current!.getBoundingClientRect();
     let clientX: number;
