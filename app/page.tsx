@@ -471,126 +471,140 @@ export default function Home() {
   return (
     <main className="flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-black/[.08] dark:border-white/[.145] bg-background/50">
-        <div className="flex items-center gap-4">
-          <h1 className="text-xs font-bold tracking-widest opacity-50">PINNOTE</h1>
+      <div className="flex items-center justify-between px-6 py-3 border-b border-white/10 glass-dark z-50">
+        <div className="flex items-center gap-6">
+          <h1 className="text-sm font-black tracking-[0.2em] text-primary drop-shadow-[0_0_8px_rgba(0,209,255,0.5)]">PINNOTE</h1>
           <button 
             onMouseDown={(e) => e.preventDefault()}
             onClick={handleOpenFile}
-            className="px-2 py-1 text-[9px] font-bold bg-black/[.05] dark:bg-white/[.05] rounded hover:bg-black/[.1] dark:hover:bg-white/[.1] transition-all flex items-center gap-1.5"
+            className="px-3 py-1.5 text-[10px] font-bold bg-white/5 rounded-full border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-2 group"
           >
-            <FileUp className="w-3 h-3" />
+            <FileUp className="w-3.5 h-3.5 group-hover:text-primary transition-colors" />
             OPEN FILE
           </button>
-          <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
+          <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-full border border-white/5">
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(false)} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${!isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+               className={`px-4 py-1.5 text-[10px] font-black rounded-full transition-all flex items-center gap-2 ${!isScribbleMode ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(0,209,255,0.3)]" : "opacity-40 hover:opacity-100"}`}
              >
-               <Type className="w-3 h-3" />
+               <Type className="w-3.5 h-3.5" />
                TEXT
              </button>
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setIsScribbleMode(true)} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${isScribbleMode ? "bg-white dark:bg-zinc-800 shadow-sm" : "opacity-50"}`}
+               className={`px-4 py-1.5 text-[10px] font-black rounded-full transition-all flex items-center gap-2 ${isScribbleMode ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(0,209,255,0.3)]" : "opacity-40 hover:opacity-100"}`}
              >
-               <Pencil className="w-3 h-3" />
+               <Pencil className="w-3.5 h-3.5" />
                SCRIBBLE
              </button>
           </div>
-          <div className="flex items-center gap-2 bg-black/[.05] dark:bg-white/[.05] p-1 rounded-md">
+          <div className="flex items-center gap-1.5 bg-white/5 p-1 rounded-full border border-white/5">
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setRightPanelMode(rightPanelMode === "ai" ? "none" : "ai")} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${rightPanelMode === "ai" ? "bg-white dark:bg-zinc-800 shadow-sm text-blue-500" : "opacity-50"}`}
+               className={`px-4 py-1.5 text-[10px] font-black rounded-full transition-all flex items-center gap-2 ${rightPanelMode === "ai" ? "bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.4)]" : "opacity-40 hover:opacity-100"}`}
              >
-               <Sparkles className="w-3 h-3" />
+               <Sparkles className="w-3.5 h-3.5" />
                AI ASSISTANT
              </button>
              <button 
                onMouseDown={(e) => e.preventDefault()}
                onClick={() => setRightPanelMode(rightPanelMode === "compiler" ? "none" : "compiler")} 
-               className={`px-3 py-1 text-[10px] font-bold rounded transition-all flex items-center gap-1.5 ${rightPanelMode === "compiler" ? "bg-white dark:bg-zinc-800 shadow-sm text-green-500" : "opacity-50"}`}
+               className={`px-4 py-1.5 text-[10px] font-black rounded-full transition-all flex items-center gap-2 ${rightPanelMode === "compiler" ? "bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.4)]" : "opacity-40 hover:opacity-100"}`}
              >
-               <Code2 className="w-3 h-3" />
+               <Code2 className="w-3.5 h-3.5" />
                COMPILER
              </button>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-2 py-1 bg-black/[.03] dark:bg-white/[.03] rounded">
-            <Save className={`w-3 h-3 ${saveStatus === "Saving..." ? "text-blue-500 animate-pulse" : "opacity-30"}`} />
-            <span className="text-[10px] font-mono opacity-30">{saveStatus}</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5">
+            <Save className={`w-3.5 h-3.5 ${saveStatus === "Saving..." ? "text-primary animate-pulse" : "opacity-20"}`} />
+            <span className="text-[10px] font-black tracking-widest opacity-20 uppercase">{saveStatus}</span>
           </div>
         </div>
       </div>
 
       {/* Unified Toolbar */}
-      <div className="flex flex-col border-b border-black/[.05] dark:border-white/[.05] bg-zinc-50 dark:bg-zinc-900/50">
-        <div className="flex items-center gap-4 px-4 py-2 overflow-x-auto no-scrollbar">
+      <div className="flex flex-col border-b border-white/5 glass z-40">
+        <div className="flex items-center gap-6 px-6 py-2 overflow-x-auto no-scrollbar">
           {!isScribbleMode ? (
             <>
-              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Quick Note:</span>
+              <div className="flex items-center gap-4 border-r pr-6 border-white/10">
+                <span className="text-[9px] font-black opacity-30 uppercase tracking-widest">Voice</span>
                 <button 
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={toggleRecording} 
-                  className={`flex items-center gap-2 px-3 py-1 rounded-full text-[10px] font-bold transition-all ${isRecording ? "bg-red-500 text-white animate-pulse" : "bg-zinc-200 dark:bg-zinc-800"}`}
+                  className={`flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black transition-all border ${isRecording ? "bg-red-500/20 border-red-500/50 text-red-500 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "bg-white/5 border-white/10 opacity-60 hover:opacity-100"}`}
                 >
-                  <div className={`w-2 h-2 rounded-full ${isRecording ? "bg-white" : "bg-red-500"}`} />
-                  {isRecording ? "LISTENING..." : "START VOICE NOTE"}
+                  <div className={`w-1.5 h-1.5 rounded-full ${isRecording ? "bg-red-500" : "bg-white/40"}`} />
+                  {isRecording ? "LISTENING" : "START NOTE"}
                 </button>
                 {isRecording && interimTranscript && (
-                  <div className="ml-2 px-2 py-1 bg-black/5 dark:bg-white/5 rounded border border-black/5 dark:border-white/5 max-w-[200px] truncate">
-                    <span className="text-[10px] italic opacity-50 whitespace-nowrap">{interimTranscript}</span>
+                  <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 max-w-[250px] truncate shadow-inner">
+                    <span className="text-[10px] font-medium italic opacity-40 whitespace-nowrap">{interimTranscript}</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center gap-1 border-r pr-3 border-black/[.1]">
-                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Color:</span>
-                {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (
-                  <button 
-                    key={name} 
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => formatText("foreColor", code)} 
-                    className={`w-5 h-5 rounded-full border border-black/10 transition-all ${selectedColor === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
-                    style={{ background: code }} 
-                  />
-                ))}
+              <div className="flex items-center gap-4 border-r pr-6 border-white/10">
+                <span className="text-[9px] font-black opacity-30 uppercase tracking-widest">Text</span>
+                <div className="flex items-center gap-2">
+                  {Object.entries(COLORS).map(([name, code]) => name !== "none" && name !== "black" && (
+                    <button 
+                      key={name} 
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => formatText("foreColor", code)} 
+                      className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-125 hover:shadow-lg ${selectedColor === code ? "border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.2)]" : "border-transparent opacity-60 hover:opacity-100"}`} 
+                      style={{ background: code }} 
+                    />
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center gap-1">
-                <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Highlight:</span>
-                {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
-                  <button 
-                    key={name} 
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() => formatText("hiliteColor", code)} 
-                    className={`w-5 h-5 rounded border border-black/10 flex items-center justify-center transition-all ${selectedHighlight === code ? "ring-2 ring-white ring-offset-1 ring-offset-black/40 scale-110 shadow-lg" : ""}`} 
-                    style={{ background: code }}
-                  >
-                    {name === "none" && <span className="text-[8px] opacity-50">×</span>}
-                  </button>
-                ))}
+              <div className="flex items-center gap-4">
+                <span className="text-[9px] font-black opacity-30 uppercase tracking-widest">Mark</span>
+                <div className="flex items-center gap-2">
+                  {Object.entries(COLORS).map(([name, code]) => name !== "black" && name !== "gray" && (
+                    <button 
+                      key={name} 
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => formatText("hiliteColor", code)} 
+                      className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-all hover:scale-125 hover:shadow-lg ${selectedHighlight === code ? "border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.2)]" : "border-transparent opacity-60 hover:opacity-100"}`} 
+                      style={{ background: code }}
+                    >
+                      {name === "none" && <span className="text-[12px] opacity-40 font-bold">×</span>}
+                    </button>
+                  ))}
+                </div>
               </div>
             </>
           ) : (
-            <div className="flex items-center gap-1">
-              <span className="text-[9px] font-bold opacity-30 uppercase mr-1">Pen:</span>
-              {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
-                <button 
-                  key={name} 
-                  onMouseDown={(e) => e.preventDefault()}
-                  onClick={() => setPen(code)} 
-                  className={`w-5 h-5 rounded-full border-2 border-white dark:border-zinc-800 shadow-sm transition-all ${selectedPen === code ? "ring-2 ring-blue-500 ring-offset-1 scale-110" : ""}`} 
-                  style={{ background: code }} 
-                />
-              ))}
-              <div className="w-[1px] h-4 bg-black/[.1] mx-2" />
-              <button onMouseDown={(e) => e.preventDefault()} onClick={clearCanvas} className="text-[9px] font-bold text-red-500 uppercase px-2 py-1 bg-red-500/10 rounded hover:bg-red-500/20">Clear</button>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-4">
+                <span className="text-[9px] font-black opacity-30 uppercase tracking-widest text-primary">Pen Tool</span>
+                <div className="flex items-center gap-2">
+                  {Object.entries(COLORS).map(([name, code]) => name !== "none" && (
+                    <button 
+                      key={name} 
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() => setPen(code)} 
+                      className={`w-6 h-6 rounded-full border-2 transition-all hover:scale-125 hover:shadow-lg ${selectedPen === code ? "border-white scale-110 shadow-[0_0_10px_rgba(255,255,255,0.2)]" : "border-transparent opacity-60 hover:opacity-100"}`} 
+                      style={{ background: code }} 
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="w-[1px] h-6 bg-white/10" />
+              <button 
+                onMouseDown={(e) => e.preventDefault()} 
+                onClick={clearCanvas} 
+                className="text-[9px] font-black text-red-500 uppercase px-4 py-1.5 bg-red-500/10 rounded-full border border-red-500/20 hover:bg-red-500/20 transition-all tracking-widest"
+              >
+                Clear Canvas
+              </button>
             </div>
           )}
         </div>
