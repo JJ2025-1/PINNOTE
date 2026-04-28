@@ -22,6 +22,15 @@ Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic 
 - **Desktop Shell:** Electron integration for a native experience.
 - **Storage:** Browser LocalStorage / IndexedDB.
 
+## 📦 Installation
+To get started with Pinnote, clone the repository and install the necessary dependencies:
+
+```bash
+git clone https://github.com/user/pinnote.git
+cd pinnote
+npm install
+```
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
