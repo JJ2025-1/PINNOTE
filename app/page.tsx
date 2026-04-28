@@ -93,7 +93,7 @@ export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isDrawing = useRef(false);
-  const lastPos = useRef({ x: 0, y: 0 });
+  const lastPos = useRef<Point>({ x: 0, y: 0 });
   const lastHtml = useRef("");
 
   // --- PERSISTENCE ---
