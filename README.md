@@ -36,6 +36,10 @@ npm install
 - npm or yarn
 - Modern web browser with Web Speech API support
 
+## 🔍 Troubleshooting
+- **Microphone not working:** Ensure browser permissions are granted.
+- **Local ML slow:** First run may take time to download models.
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
