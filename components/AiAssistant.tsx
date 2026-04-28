@@ -13,11 +13,11 @@ export default function AiAssistant() {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Triggers an AI task such as summarization or grammar correction
-  const handleAiAction = (action: string) => {
+  const handleAiAction = (aiAction: string) => {
     setIsProcessing(true);
     // Placeholder for AI logic
     setTimeout(() => {
-      setResponse(`AI response for ${action}: This is a placeholder for the actual AI output. Implementation coming soon!`);
+      setResponse(`AI response for ${aiAction}: This is a placeholder for the actual AI output. Implementation coming soon!`);
       setIsProcessing(false);
     }, 1500);
   };
