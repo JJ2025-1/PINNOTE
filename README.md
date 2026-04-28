@@ -49,6 +49,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 - [ ] Cloud sync (optional/encrypted)
 - [ ] More AI models support
 
+## 📜 Changelog
+- v0.2.0: Added AI Assistant and Compiler
+- v0.1.0: Initial release
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
