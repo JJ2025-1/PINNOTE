@@ -632,7 +632,7 @@ export default function Home() {
       {/* Integrated Editor Content */}
       <div className="flex-1 flex overflow-hidden">
         <div className="flex-1 relative bg-black/20 overflow-y-auto custom-scrollbar" ref={scrollContainerRef}>
-          <div className="relative min-h-full p-12 max-w-5xl mx-auto" style={{ direction: 'ltr', textAlign: 'left' }}>
+          <div className="relative min-h-full p-[49px] max-w-5xl mx-auto" style={{ direction: 'ltr', textAlign: 'left' }}>
             <div className="absolute inset-0 bg-zinc-950/50 shadow-[0_0_50px_rgba(0,0,0,0.5)] border-x border-white/5 z-0" />
             <div
               ref={editorRef}
