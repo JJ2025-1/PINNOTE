@@ -40,6 +40,9 @@ npm install
 - **Microphone not working:** Ensure browser permissions are granted.
 - **Local ML slow:** First run may take time to download models.
 
+## 🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
 ## 🚦 Getting Started
 1. **Install Dependencies:** `npm install`
 2. **Run Development:** `npm run dev`
