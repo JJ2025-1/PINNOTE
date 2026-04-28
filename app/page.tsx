@@ -389,6 +389,7 @@ export default function Home() {
   };
 
   // --- SCRIBBLE LOGIC ---
+  // Initializes the drawing state on the canvas
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isScribbleMode) return;
     isDrawing.current = true;
