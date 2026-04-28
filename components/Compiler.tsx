@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Code2, Play, Terminal, Info, Loader2, Trash2 } from "lucide-react";
 
+/**
+ * Compiler component provides a playground for writing and executing code
+ * snippets directly within the application.
+ */
 export default function Compiler() {
   const [code, setCode] = useState("// Type your code here\nconsole.log('Hello, Pinnote!');");
   const [output, setOutput] = useState("");
