@@ -343,6 +343,7 @@ export default function Home() {
     }
   }, []);
 
+  // Starts or stops the speech recognition service
   const toggleRecording = () => {
     if (!recognitionRef.current) {
       alert("Speech recognition is not supported in this browser.");
