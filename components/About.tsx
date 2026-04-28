@@ -20,28 +20,28 @@ export default function About() {
   };
 
   return (
-    <div className="p-4 bg-zinc-50 dark:bg-zinc-900 border-t border-black/[.05] dark:border-white/[.05] flex items-center justify-between text-[10px] opacity-50 font-medium">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-1.5">
-          <Info className="w-3 h-3" />
+    <div className="px-8 py-3 glass border-t border-white/10 flex items-center justify-between text-[10px] font-black tracking-widest relative z-50">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 text-primary opacity-60 hover:opacity-100 transition-opacity">
+          <Info className="w-3.5 h-3.5" />
           <span>PINNOTE v0.2.0-AI</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <Mail className="w-3 h-3" />
-          <a href="mailto:jeevanjanakiraman@gmail.com" className="hover:text-blue-500 transition-colors">jeevanjanakiraman@gmail.com</a>
+        <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-opacity">
+          <Mail className="w-3.5 h-3.5 text-blue-400" />
+          <a href="mailto:jeevanjanakiraman@gmail.com" className="hover:text-blue-400 transition-colors uppercase">Support</a>
         </div>
       </div>
-      <div className="flex items-center gap-4">
-        <button onClick={handleShare} className="flex items-center gap-1.5 hover:text-blue-500 transition-colors">
-          <Share2 className="w-3 h-3" />
-          <span>SHARE</span>
+      <div className="flex items-center gap-6">
+        <button onClick={handleShare} className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-all hover:scale-105 active:scale-95 group">
+          <Share2 className="w-3.5 h-3.5 group-hover:text-primary transition-colors" />
+          <span className="group-hover:text-primary transition-colors">SHARE</span>
         </button>
-        <div className="w-[1px] h-3 bg-black/10 dark:bg-white/10" />
-        <span>Think faster, locally.</span>
-        <div className="flex items-center gap-1.5">
-          <Github className="w-3 h-3" />
-          <a href="https://github.com/JJ2025-1/PINNOTE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-            Source <ExternalLink className="w-2 h-2" />
+        <div className="w-[1px] h-3 bg-white/10" />
+        <span className="opacity-20 italic lowercase font-serif tracking-normal text-[11px]">Think faster, locally.</span>
+        <div className="flex items-center gap-2 opacity-30 hover:opacity-100 transition-all group">
+          <Github className="w-3.5 h-3.5 group-hover:text-white" />
+          <a href="https://github.com/JJ2025-1/PINNOTE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+            CODEBASE <ExternalLink className="w-2.5 h-2.5" />
           </a>
         </div>
       </div>
