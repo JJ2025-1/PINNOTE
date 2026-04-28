@@ -48,6 +48,11 @@ interface SpeechRecognitionErrorEvent extends Event {
   message: string;
 }
 
+interface Point {
+  x: number;
+  y: number;
+}
+
 interface ElectronAPI {
   openFile: () => Promise<{ success: boolean; path?: string; reason?: string }>;
 }
