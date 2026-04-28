@@ -54,6 +54,9 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 2. **Run Development:** `npm run dev`
 3. **Build Desktop App:** `npm run electron-dev`
 
+## 📧 Support
+For support, join our discord or email the maintainer.
+
 ## 👨‍💻 About
 Developed with a focus on local-first productivity.
 For inquiries, contact: **jeevanjanakiraman@gmail.com**
