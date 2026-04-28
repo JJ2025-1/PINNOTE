@@ -285,7 +285,7 @@ export default function Home() {
           }
         }
 
-        setInterimTranscript(currentInterim);
+        setInterimTranscript(currentInterim); // Real-time feedback for the user as they speak
 
         if (finalTranscript && editorRef.current) {
           editorRef.current.focus();
