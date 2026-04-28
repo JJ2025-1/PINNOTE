@@ -18,7 +18,7 @@ export default function Compiler() {
     setTerminalOutput("");
     
     // Placeholder for actual compilation/execution logic
-    setTimeout(() => {
+    setTimeout(() => { // Simulated delay to mimic compilation process
       if (code.includes("console.log")) {
         setTerminalOutput("> Hello, Pinnote!\n> Execution complete.");
       } else {
