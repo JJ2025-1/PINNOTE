@@ -393,8 +393,8 @@ export default function Home() {
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     if (!isScribbleMode) return;
     isDrawing.current = true;
-    const pos = getPos(e);
-    lastPos.current = pos;
+    const mousePos = getPos(e);
+    lastPos.current = mousePos;
   };
 
   // Performs the actual drawing on the canvas as the mouse/finger moves
@@ -410,7 +410,7 @@ export default function Home() {
     const pos = getPos(e);
     ctx.beginPath();
     ctx.moveTo(lastPos.current.x, lastPos.current.y);
-    ctx.lineTo(pos.x, pos.y);
+    ctx.lineTo(mousePos.x, mousePos.y);
     ctx.stroke();
     lastPos.current = pos;
   };
