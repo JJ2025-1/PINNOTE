@@ -23,6 +23,9 @@ Most note-taking apps force a choice: type in a rigid grid or draw on a chaotic 
 - **Desktop Shell:** Electron integration for a native experience.
 - **Storage:** Browser LocalStorage / IndexedDB.
 
+## 📋 Prerequisites
+Before installing, make sure you have Git and Node.js installed on your system.
+
 ## 📦 Installation
 To get started with Pinnote, clone the repository and install the necessary dependencies:
 
