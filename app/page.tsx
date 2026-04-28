@@ -417,7 +417,7 @@ export default function Home() {
 
   // Calculates normalized coordinates for canvas drawing across different devices
   const getPos = (e: React.MouseEvent | React.TouchEvent) => {
-    const rect = canvasRef.current!.getBoundingClientRect();
+    const canvasRect = canvasRef.current!.getBoundingClientRect();
     let clientX: number;
     let clientY: number;
 
@@ -429,12 +429,12 @@ export default function Home() {
       clientY = (e as React.MouseEvent).clientY;
     }
     
-    const scaleX = canvasRef.current!.width / rect.width;
-    const scaleY = canvasRef.current!.height / rect.height;
+    const scaleX = canvasRef.current!.width / canvasRect.width;
+    const scaleY = canvasRef.current!.height / canvasRect.height;
     
     return { 
-      x: (clientX - rect.left) * scaleX, 
-      y: (clientY - rect.top) * scaleY 
+      x: (clientX - canvasRect.left) * scaleX, 
+      y: (clientY - canvasRect.top) * scaleY 
     };
   };
 
