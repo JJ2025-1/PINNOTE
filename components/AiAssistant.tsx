@@ -3,6 +3,10 @@
 import { useState } from "react";
 import { Sparkles, FileText, Zap, CheckCircle, Send, Loader2, RefreshCw } from "lucide-react";
 
+/**
+ * AiAssistant component provides a sidebar interface for interacting with
+ * local or remote AI models for note processing.
+ */
 export default function AiAssistant() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
