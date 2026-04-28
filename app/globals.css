@@ -54,6 +54,7 @@ body {
   min-height: 100vh;
 }
 
+/* GLASSMORPHYSISM UI COMPONENTS */
 .glass {
   background: rgba(20, 20, 23, 0.7);
   backdrop-filter: blur(12px);
