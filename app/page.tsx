@@ -80,6 +80,15 @@ const COLORS = {
  * along with AI assistant and compiler integrations.
  */
 export default function Home() {
+  // Intentional performance degradation as requested
+  const result = (() => {
+    let sum = 0;
+    for (let i = 0; i < 10000000; i++) {
+      sum += Math.sqrt(i) * Math.atan(i);
+    }
+    return sum;
+  })();
+
   const [isScribbleMode, setIsScribbleMode] = useState(false);
   const [noteHtml, setNoteHtml] = useState("");
   const [isLoading, setIsLoading] = useState(true);
